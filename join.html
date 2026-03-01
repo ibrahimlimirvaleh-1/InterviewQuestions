@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL JOIN-lar - Venn Diaqramları</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+
+        const Info = ({ size, className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        );
+
+        const SQLJoinsVenn = () => {
+            const [selectedJoin, setSelectedJoin] = useState('inner');
+
+            const joins = {
+                inner: {
+                    name: 'INNER JOIN',
+                    description: 'Yalnız hər iki cədvəldə olan məlumatlar',
+                    color: '#8b5cf6',
+                    example: `SELECT T.Ad, Q.Qiymət
+FROM Tələbələr T
+INNER JOIN Qiymətlər Q 
+ON T.ID = Q.TələbəID`,
+                    result: 'Əli (90), Vüsal (75), Leyla (88)',
+                    excluded: 'Nigar (qiyməti yox), Naməlum qiymət (tələbəsi yox)'
+                },
+                left: {
+                    name: 'LEFT JOIN',
+                    description: 'Sol cədvəlin BÜTÜN sətirləri + sağdan uyğun olanlar',
+                    color: '#3b82f6',
+                    example: `SELECT T.Ad, Q.Qiymət
+FROM Tələbələr T
+LEFT JOIN Qiymətlər Q 
+ON T.ID = Q.TələbəID`,
+                    result: 'Əli (90), Vüsal (75), Leyla (88), Nigar (NULL)',
+                    excluded: 'Naməlum qiymət (tələbəsi yox)'
+                },
+                right: {
+                    name: 'RIGHT JOIN',
+                    description: 'Sağ cədvəlin BÜTÜN sətirləri + soldan uyğun olanlar',
+                    color: '#10b981',
+                    example: `SELECT T.Ad, Q.Qiymət
+FROM Tələbələr T
+RIGHT JOIN Qiymətlər Q 
+ON T.ID = Q.TələbəID`,
+                    result: 'Əli (90), Vüsal (75), Leyla (88), NULL (95)',
+                    excluded: 'Nigar (qiyməti yox)'
+                },
+                full: {
+                    name: 'FULL OUTER JOIN',
+                    description: 'Hər iki cədvəlin BÜTÜN sətirləri',
+                    color: '#f59e0b',
+                    example: `SELECT T.Ad, Q.Qiymət
+FROM Tələbələr T
+FULL OUTER JOIN Qiymətlər Q 
+ON T.ID = Q.TələbəID`,
+                    result: 'Əli (90), Vüsal (75), Leyla (88), Nigar (NULL), NULL (95)',
+                    excluded: 'Heç nə (hamısı daxildir)'
+                },
+                cross: {
+                    name: 'CROSS JOIN',
+                    description: 'Hər bir sətr digər cədvəlin hər sətri ilə (Kartezian hasil)',
+                    color: '#ef4444',
+                    example: `SELECT T.Ad, Q.Qiymət
+FROM Tələbələr T
+CROSS JOIN Qiymətlər Q`,
+                    result: '4 tələbə × 4 qiymət = 16 kombinasiya',
+                    excluded: 'Heç nə (hamısı birləşir)'
+                }
+            };
+
+            const currentJoin = joins[selectedJoin];
+
+            const VennDiagram = ({ type }) => {
+                const commonStyle = "transition-all duration-300";
+                
+                return (
+                    <div className="relative w-full h-64 flex items-center justify-center">
+                        <svg viewBox="0 0 400 200" className="w-full h-full">
+                            <circle
+                                cx="130" cy="100" r="70"
+                                fill={
+                                    type === 'inner' ? '#e0e7ff' :
+                                    type === 'left' ? '#3b82f6' :
+                                    type === 'right' ? '#e0e7ff' :
+                                    type === 'full' ? '#3b82f6' :
+                                    type === 'cross' ? '#3b82f6' : '#e0e7ff'
+                                }
+                                stroke="#1e40af"
+                                strokeWidth="2"
+                                opacity={type === 'right' ? 0.3 : 0.8}
+                            />
+                            
+                            <circle
+                                cx="270" cy="100" r="70"
+                                fill={
+                                    type === 'inner' ? '#e0e7ff' :
+                                    type === 'left' ? '#e0e7ff' :
+                                    type === 'right' ? '#10b981' :
+                                    type === 'full' ? '#10b981' :
+                                    type === 'cross' ? '#10b981' : '#e0e7ff'
+                                }
+                                stroke="#047857"
+                                strokeWidth="2"
+                                opacity={type === 'left' ? 0.3 : 0.8}
+                            />
+                            
+                            <ellipse
+                                cx="200" cy="100" rx="35" ry="70"
+                                fill={currentJoin.color}
+                                opacity={type === 'cross' ? 0 : 0.9}
+                            />
+
+                            {type === 'cross' && (
+                                <>
+                                    <line x1="130" y1="100" x2="270" y2="100" stroke="#ef4444" strokeWidth="3" strokeDasharray="5,5" />
+                                    <line x1="130" y1="60" x2="270" y2="140" stroke="#ef4444" strokeWidth="2" strokeDasharray="5,5" />
+                                    <line x1="130" y1="140" x2="270" y2="60" stroke="#ef4444" strokeWidth="2" strokeDasharray="5,5" />
+                                </>
+                            )}
+                            
+                            <text x="100" y="50" fill="#1e40af" fontSize="14" fontWeight="bold" textAnchor="middle">Tələbələr</text>
+                            <text x="100" y="70" fill="#1e40af" fontSize="11" textAnchor="middle">(Sol cədvəl)</text>
+                            
+                            <text x="300" y="50" fill="#047857" fontSize="14" fontWeight="bold" textAnchor="middle">Qiymətlər</text>
+                            <text x="300" y="70" fill="#047857" fontSize="11" textAnchor="middle">(Sağ cədvəl)</text>
+
+                            {type !== 'cross' && (
+                                <text x="200" y="105" fill="white" fontSize="13" fontWeight="bold" textAnchor="middle">Ortaq</text>
+                            )}
+
+                            <text x="80" y="120" fill="#1e40af" fontSize="10">Əli</text>
+                            <text x="80" y="135" fill="#1e40af" fontSize="10">Vüsal</text>
+                            <text x="175" y="120" fill="white" fontSize="10" fontWeight="bold">Leyla</text>
+                            <text x="300" y="120" fill="#047857" fontSize="10">ID:5</text>
+                            <text x="80" y="150" fill="#1e40af" fontSize="10">Nigar</text>
+                        </svg>
+
+                        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 text-xs">
+                            <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                                <span>Tələbələr</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                <span>Qiymətlər</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: currentJoin.color}}></div>
+                                <span>Nəticə</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+                    <div className="text-center mb-8">
+                        <h1 className="text-4xl font-bold text-slate-800 mb-2">SQL JOIN-lar 🔗</h1>
+                        <p className="text-slate-600">Venn Diaqramları ilə vizual izahat</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+                        {Object.entries(joins).map(([key, join]) => (
+                            <button
+                                key={key}
+                                onClick={() => setSelectedJoin(key)}
+                                className={`p-4 rounded-lg font-semibold transition-all ${
+                                    selectedJoin === key
+                                        ? 'bg-white shadow-lg scale-105 ring-2'
+                                        : 'bg-white/50 hover:bg-white hover:shadow'
+                                }`}
+                                style={{ringColor: selectedJoin === key ? join.color : 'transparent'}}
+                            >
+                                {join.name.split(' ')[0]}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-white rounded-xl shadow-lg p-6">
+                            <h2 className="text-2xl font-bold mb-4" style={{color: currentJoin.color}}>
+                                {currentJoin.name}
+                            </h2>
+                            
+                            <VennDiagram type={selectedJoin} />
+                            
+                            <div className="mt-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                <div className="flex items-start gap-2">
+                                    <Info size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
+                                    <p className="text-sm text-slate-700">{currentJoin.description}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="bg-slate-900 rounded-xl shadow-lg p-6 text-white">
+                                <h3 className="text-lg font-semibold mb-3 text-green-400">SQL Sorğusu:</h3>
+                                <pre className="text-sm overflow-x-auto"><code>{currentJoin.example}</code></pre>
+                            </div>
+
+                            <div className="bg-white rounded-xl shadow-lg p-6">
+                                <h3 className="text-lg font-semibold mb-3" style={{color: currentJoin.color}}>📊 Nəticə:</h3>
+                                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                                    <p className="text-sm text-slate-700 font-medium">{currentJoin.result}</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-xl shadow-lg p-6">
+                                <h3 className="text-lg font-semibold mb-3 text-red-600">❌ Xaric qalan:</h3>
+                                <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                                    <p className="text-sm text-slate-700">{currentJoin.excluded}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 grid md:grid-cols-2 gap-6">
+                        <div className="bg-white rounded-xl shadow-lg p-6">
+                            <h3 className="text-xl font-bold text-blue-600 mb-4">📘 Tələbələr Cədvəli</h3>
+                            <table className="w-full text-sm">
+                                <thead className="bg-blue-100">
+                                    <tr><th className="p-2 text-left">ID</th><th className="p-2 text-left">Ad</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="border-b"><td className="p-2">1</td><td className="p-2">Əli</td></tr>
+                                    <tr className="border-b"><td className="p-2">2</td><td className="p-2">Vüsal</td></tr>
+                                    <tr className="border-b"><td className="p-2">3</td><td className="p-2">Leyla</td></tr>
+                                    <tr><td className="p-2">4</td><td className="p-2">Nigar</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="bg-white rounded-xl shadow-lg p-6">
+                            <h3 className="text-xl font-bold text-green-600 mb-4">📗 Qiymətlər Cədvəli</h3>
+                            <table className="w-full text-sm">
+                                <thead className="bg-green-100">
+                                    <tr><th className="p-2 text-left">ID</th><th className="p-2 text-left">TələbəID</th><th className="p-2 text-left">Qiymət</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="border-b"><td className="p-2">1</td><td className="p-2">1</td><td className="p-2">90</td></tr>
+                                    <tr className="border-b"><td className="p-2">2</td><td className="p-2">2</td><td className="p-2">75</td></tr>
+                                    <tr className="border-b"><td className="p-2">3</td><td className="p-2">3</td><td className="p-2">88</td></tr>
+                                    <tr><td className="p-2">4</td><td className="p-2 text-red-600">5</td><td className="p-2">95</td></tr>
+                                </tbody>
+                            </table>
+                            <p className="text-xs text-red-600 mt-2">* TələbəID=5 mövcud deyil</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
+                        <h3 className="text-2xl font-bold text-slate-800 mb-4 text-center">📋 Sürətli Müqayisə</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead className="bg-slate-100">
+                                    <tr>
+                                        <th className="p-3 text-left">JOIN növü</th>
+                                        <th className="p-3 text-left">Sol cədvəl</th>
+                                        <th className="p-3 text-left">Ortaq hissə</th>
+                                        <th className="p-3 text-left">Sağ cədvəl</th>
+                                        <th className="p-3 text-left">İstifadə</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="border-b hover:bg-purple-50">
+                                        <td className="p-3 font-semibold">INNER</td>
+                                        <td className="p-3">❌</td><td className="p-3">✅</td><td className="p-3">❌</td>
+                                        <td className="p-3">⭐⭐⭐⭐⭐</td>
+                                    </tr>
+                                    <tr className="border-b hover:bg-blue-50">
+                                        <td className="p-3 font-semibold">LEFT</td>
+                                        <td className="p-3">✅</td><td className="p-3">✅</td><td className="p-3">❌</td>
+                                        <td className="p-3">⭐⭐⭐⭐</td>
+                                    </tr>
+                                    <tr className="border-b hover:bg-green-50">
+                                        <td className="p-3 font-semibold">RIGHT</td>
+                                        <td className="p-3">❌</td><td className="p-3">✅</td><td className="p-3">✅</td>
+                                        <td className="p-3">⭐⭐</td>
+                                    </tr>
+                                    <tr className="border-b hover:bg-orange-50">
+                                        <td className="p-3 font-semibold">FULL OUTER</td>
+                                        <td className="p-3">✅</td><td className="p-3">✅</td><td className="p-3">✅</td>
+                                        <td className="p-3">⭐</td>
+                                    </tr>
+                                    <tr className="hover:bg-red-50">
+                                        <td className="p-3 font-semibold">CROSS</td>
+                                        <td className="p-3">✅ (hamısı)</td><td className="p-3">✅ (hamısı)</td><td className="p-3">✅ (hamısı)</td>
+                                        <td className="p-3">⭐</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl shadow-lg p-6">
+                        <h3 className="text-2xl font-bold text-slate-800 mb-4">💡 Praktik Məsləhətlər</h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="bg-white p-4 rounded-lg">
+                                <h4 className="font-semibold text-green-600 mb-2">✅ Yaxşı təcrübə:</h4>
+                                <ul className="text-sm space-y-1 text-slate-700">
+                                    <li>• 90% hallarda INNER JOIN istifadə et</li>
+                                    <li>• Alias istifadə et (T, Q)</li>
+                                    <li>• İndeks qoy (performans)</li>
+                                    <li>• Yalnız lazım olan kolonları seç</li>
+                                </ul>
+                            </div>
+                            <div className="bg-white p-4 rounded-lg">
+                                <h4 className="font-semibold text-red-600 mb-2">❌ Pis təcrübə:</h4>
+                                <ul className="text-sm space-y-1 text-slate-700">
+                                    <li>• SELECT * istifadə etmə</li>
+                                    <li>• İndekssiz böyük cədvəllər</li>
+                                    <li>• CROSS JOIN ehtiyatsız istifadə</li>
+                                    <li>• ON və WHERE qarışdırma</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SQLJoinsVenn />);
+    </script>
+</body>
+</html>

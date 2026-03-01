@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEFT JOIN - Student & Mark Nümunəsi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Başlıq -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">LEFT JOIN Nümunəsi 🎓</h1>
+            <p class="text-slate-600">Student ⟷ Mark (Tələbə ⟷ Qiymət)</p>
+        </div>
+
+        <!-- SQL Sorğusu -->
+        <div class="bg-slate-900 text-white rounded-xl shadow-xl p-6 mb-8">
+            <div class="flex items-center gap-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+                <h2 class="text-xl font-bold text-green-400">SQL Sorğusu:</h2>
+            </div>
+            <pre class="text-sm overflow-x-auto bg-slate-800 p-4 rounded">SELECT s.id, s.Name, m.Value
+FROM Student s           ← SOL CƏDVƏL (əsas)
+LEFT JOIN Mark m         ← SAĞ CƏDVƏL (əlavə)
+ON s.Mark_Id = m.id</pre>
+        </div>
+
+        <!-- İzah -->
+        <div class="bg-blue-100 border-l-4 border-blue-500 p-4 mb-8 rounded-lg">
+            <div class="flex items-start gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 flex-shrink-0 mt-1">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <div>
+                    <p class="font-bold text-blue-900 mb-2">LEFT JOIN qaydası:</p>
+                    <p class="text-blue-800 text-sm">
+                        <strong>Student</strong> cədvəlinin <strong>BÜTÜN</strong> sətirlərini göstər.<br>
+                        Mark cədvəlində uyğunluq varsa - qiymətini göstər.<br>
+                        Uyğunluq yoxdursa - <code class="bg-blue-200 px-1 rounded">NULL</code> göstər.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cədvəllər -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8 items-center">
+            <!-- Student cədvəli -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                    <h3 class="text-xl font-bold text-blue-600">Student (Sol)</h3>
+                </div>
+                <table class="w-full text-sm">
+                    <thead class="bg-blue-100">
+                        <tr>
+                            <th class="p-2 text-left">id</th>
+                            <th class="p-2 text-left">Name</th>
+                            <th class="p-2 text-left">Mark_Id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="p-2">1</td>
+                            <td class="p-2 font-medium">Əli</td>
+                            <td class="p-2">101</td>
+                        </tr>
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="p-2">2</td>
+                            <td class="p-2 font-medium">Vüsal</td>
+                            <td class="p-2">102</td>
+                        </tr>
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="p-2">3</td>
+                            <td class="p-2 font-medium">Leyla</td>
+                            <td class="p-2">103</td>
+                        </tr>
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="p-2">4</td>
+                            <td class="p-2 font-medium">Nigar</td>
+                            <td class="p-2"><span class="text-red-600 font-bold">NULL</span></td>
+                        </tr>
+                        <tr class="hover:bg-blue-50">
+                            <td class="p-2">5</td>
+                            <td class="p-2 font-medium">Rəşad</td>
+                            <td class="p-2"><span class="text-red-600 font-bold">999</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-xs text-slate-500 mt-2">5 tələbə (hamısı görsənəcək)</p>
+            </div>
+
+            <!-- Ox -->
+            <div class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </div>
+
+            <!-- Mark cədvəli -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                    <h3 class="text-xl font-bold text-green-600">Mark (Sağ)</h3>
+                </div>
+                <table class="w-full text-sm">
+                    <thead class="bg-green-100">
+                        <tr>
+                            <th class="p-2 text-left">id</th>
+                            <th class="p-2 text-left">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-green-50">
+                            <td class="p-2">101</td>
+                            <td class="p-2 font-bold">90</td>
+                        </tr>
+                        <tr class="border-b hover:bg-green-50">
+                            <td class="p-2">102</td>
+                            <td class="p-2 font-bold">75</td>
+                        </tr>
+                        <tr class="border-b hover:bg-green-50">
+                            <td class="p-2">103</td>
+                            <td class="p-2 font-bold">88</td>
+                        </tr>
+                        <tr class="hover:bg-green-50">
+                            <td class="p-2">104</td>
+                            <td class="p-2 font-bold">95</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-xs text-slate-500 mt-2">4 qiymət (id=104 istifadə olunmayacaq)</p>
+            </div>
+        </div>
+
+        <!-- Nəticə düyməsi -->
+        <div class="text-center mb-8">
+            <button id="toggleBtn" onclick="toggleResult()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
+                🔽 LEFT JOIN Nəticəsini göstər
+            </button>
+        </div>
+
+        <!-- Nəticə cədvəli (gizli) -->
+        <div id="result" style="display: none;" class="bg-white rounded-xl shadow-2xl p-6 animate-fadeIn">
+            <h3 class="text-2xl font-bold text-indigo-600 mb-4 text-center">📊 LEFT JOIN Nəticəsi</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-indigo-100">
+                        <tr>
+                            <th class="p-3 text-left">s.id</th>
+                            <th class="p-3 text-left">s.Name</th>
+                            <th class="p-3 text-left">m.Value</th>
+                            <th class="p-3 text-left">İzah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b bg-green-50">
+                            <td class="p-3">1</td>
+                            <td class="p-3 font-medium">Əli</td>
+                            <td class="p-3"><span class="text-green-600 font-bold">90</span></td>
+                            <td class="p-3 text-xs text-green-600">✓ Uyğunluq tapıldı</td>
+                        </tr>
+                        <tr class="border-b bg-green-50">
+                            <td class="p-3">2</td>
+                            <td class="p-3 font-medium">Vüsal</td>
+                            <td class="p-3"><span class="text-green-600 font-bold">75</span></td>
+                            <td class="p-3 text-xs text-green-600">✓ Uyğunluq tapıldı</td>
+                        </tr>
+                        <tr class="border-b bg-green-50">
+                            <td class="p-3">3</td>
+                            <td class="p-3 font-medium">Leyla</td>
+                            <td class="p-3"><span class="text-green-600 font-bold">88</span></td>
+                            <td class="p-3 text-xs text-green-600">✓ Uyğunluq tapıldı</td>
+                        </tr>
+                        <tr class="border-b bg-yellow-50">
+                            <td class="p-3">4</td>
+                            <td class="p-3 font-medium">Nigar</td>
+                            <td class="p-3"><span class="text-red-600 font-bold">NULL</span></td>
+                            <td class="p-3 text-xs text-red-600">✗ Uyğunluq yoxdur</td>
+                        </tr>
+                        <tr class="bg-yellow-50">
+                            <td class="p-3">5</td>
+                            <td class="p-3 font-medium">Rəşad</td>
+                            <td class="p-3"><span class="text-red-600 font-bold">NULL</span></td>
+                            <td class="p-3 text-xs text-red-600">✗ Uyğunluq yoxdur</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Ətraflı izah -->
+            <div class="mt-6 grid md:grid-cols-2 gap-4">
+                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h4 class="font-bold text-green-800 mb-2">✅ Uyğun olanlar (3 nəfər):</h4>
+                    <ul class="text-sm text-green-700 space-y-1">
+                        <li>• <strong>Əli</strong>: Mark_Id=101 → Qiymət=90</li>
+                        <li>• <strong>Vüsal</strong>: Mark_Id=102 → Qiymət=75</li>
+                        <li>• <strong>Leyla</strong>: Mark_Id=103 → Qiymət=88</li>
+                    </ul>
+                </div>
+
+                <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-300">
+                    <h4 class="font-bold text-yellow-800 mb-2">⚠️ NULL olanlar (2 nəfər):</h4>
+                    <ul class="text-sm text-yellow-700 space-y-1">
+                        <li>• <strong>Nigar</strong>: Mark_Id=NULL (qiymət verilməyib)</li>
+                        <li>• <strong>Rəşad</strong>: Mark_Id=999 (belə qiymət yoxdur)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vizual Venn Diaqramı -->
+        <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-2xl font-bold text-center text-slate-800 mb-6">Vizual göstəriş (Venn Diaqramı)</h3>
+            <div class="flex justify-center">
+                <svg viewBox="0 0 400 200" class="w-full max-w-2xl h-48">
+                    <!-- Sol dairə - Student -->
+                    <circle cx="130" cy="100" r="70" fill="#3b82f6" opacity="0.7" stroke="#1e40af" stroke-width="2"/>
+                    
+                    <!-- Sağ dairə - Mark -->
+                    <circle cx="270" cy="100" r="70" fill="#e5e7eb" opacity="0.5" stroke="#9ca3af" stroke-width="2"/>
+                    
+                    <!-- Kəsişmə -->
+                    <ellipse cx="200" cy="100" rx="35" ry="70" fill="#10b981" opacity="0.8"/>
+                    
+                    <!-- Etiketlər -->
+                    <text x="100" y="50" fill="#1e40af" font-size="14" font-weight="bold" text-anchor="middle">Student</text>
+                    <text x="100" y="70" fill="#1e40af" font-size="11" text-anchor="middle">(5 tələbə)</text>
+                    <text x="100" y="85" fill="#1e40af" font-size="11" text-anchor="middle">HAMISI</text>
+                    <text x="100" y="100" fill="#1e40af" font-size="11" text-anchor="middle">görsənir!</text>
+                    
+                    <text x="300" y="50" fill="#6b7280" font-size="14" font-weight="bold" text-anchor="middle">Mark</text>
+                    <text x="300" y="70" fill="#6b7280" font-size="11" text-anchor="middle">(4 qiymət)</text>
+                    
+                    <text x="200" y="105" fill="white" font-size="12" font-weight="bold" text-anchor="middle">3 uyğun</text>
+                    
+                    <!-- Məlumatlar -->
+                    <text x="80" y="130" fill="#1e40af" font-size="10">Nigar ✗</text>
+                    <text x="80" y="145" fill="#1e40af" font-size="10">Rəşad ✗</text>
+                    <text x="170" y="130" fill="white" font-size="10" font-weight="bold">Əli ✓</text>
+                    <text x="320" y="120" fill="#6b7280" font-size="10">id=104</text>
+                </svg>
+            </div>
+            <p class="text-center text-sm text-slate-600 mt-4">
+                🔵 Mavi = Sol cədvəl (Student) - hamısı qalır<br>
+                🟢 Yaşıl = Ortaq hissə (uyğun olanlar)<br>
+                ⚪ Boz = Sağ cədvəl (istifadə olunmayan)
+            </p>
+        </div>
+
+        <!-- Əlavə izahatlar -->
+        <div class="mt-8 grid md:grid-cols-3 gap-4">
+            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                <h4 class="font-bold text-blue-800 mb-2">🔵 Sol cədvəl (Student)</h4>
+                <p class="text-sm text-blue-700">
+                    FROM Student - bura SOL tərəfdir. <strong>Bütün sətirləri</strong> nəticədə görsənir.
+                </p>
+            </div>
+
+            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                <h4 class="font-bold text-green-800 mb-2">🟢 Sağ cədvəl (Mark)</h4>
+                <p class="text-sm text-green-700">
+                    LEFT JOIN Mark - bura SAĞ tərəfdir. Yalnız <strong>uyğun gələnlər</strong> istifadə olunur.
+                </p>
+            </div>
+
+            <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                <h4 class="font-bold text-red-800 mb-2">⚠️ NULL nə vaxt olur?</h4>
+                <p class="text-sm text-red-700">
+                    Sol cədvəldə var, amma sağ cədvəldə uyğunluq yoxdursa NULL olur.
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-slate-600">
+            <p>💡 Düyməyə basaraq nəticəni göstər/gizlət</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleResult() {
+            const result = document.getElementById('result');
+            const btn = document.getElementById('toggleBtn');
+            
+            if (result.style.display === 'none') {
+                result.style.display = 'block';
+                btn.innerHTML = '🔼 Nəticəni gizlət';
+            } else {
+                result.style.display = 'none';
+                btn.innerHTML = '🔽 LEFT JOIN Nəticəsini göstər';
+            }
+        }
+    </script>
+</body>
+</html>

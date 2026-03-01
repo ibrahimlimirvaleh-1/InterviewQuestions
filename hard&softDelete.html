@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL-də Soft Delete - Nəzəri və Praktiki Bələdçi</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            padding: 40px;
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c3e50;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 18px;
+            font-style: italic;
+        }
+        
+        .author-info {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+        
+        .code-block code {
+            color: #2c3e50;
+            display: block;
+            white-space: pre;
+        }
+        
+        .highlight-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .comparison-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .pros-cons {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .pros, .cons {
+            flex: 1;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .pros {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .cons {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .pros h4, .cons h4 {
+            margin-top: 0;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            
+            .download-btn {
+                display: none;
+            }
+            
+            h2 {
+                page-break-after: avoid;
+            }
+            
+            .code-block, .highlight-box, .warning-box {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="window.print()">📄 PDF Yüklə</button>
+    
+    <div class="header">
+        <h1>SQL-də Soft Delete</h1>
+        <div class="subtitle">Nəzəri və Praktiki Bələdçi</div>
+    </div>
+    
+    <div class="author-info">
+        Verilənlər Bazası İdarəetmə Sistemləri<br>
+        Tarix: 3 Yanvar 2026
+    </div>
+
+    <h2>1. Giriş</h2>
+    <p><strong>Soft Delete</strong> (Yumşaq Silinmə) - məlumatın verilənlər bazasından fiziki olaraq silinməyib, ancaq silinmiş kimi qeyd edilməsi üsuludur. Bu metodologiya müasir proqram təminatı sistemlərində geniş istifadə olunur və məlumat təhlükəsizliyi, audit və geri qaytarma imkanları təmin edir.</p>
+    
+    <div class="highlight-box">
+        <strong>Əsas Prinsip:</strong> Məlumat əslində verilənlər bazasında qalır, sadəcə xüsusi işarə (marker) ilə "silinmiş" statusu alır və standart sorğularda görünmür.
+    </div>
+
+    <h2>2. Hard Delete və Soft Delete Müqayisəsi</h2>
+    
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Xüsusiyyət</th>
+                <th>Hard Delete</th>
+                <th>Soft Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Əməliyyat</strong></td>
+                <td>DELETE FROM table</td>
+                <td>UPDATE table SET deleted_at</td>
+            </tr>
+            <tr>
+                <td><strong>Məlumat</strong></td>
+                <td>Tamamilə silinir</td>
+                <td>Bazada qalır</td>
+            </tr>
+            <tr>
+                <td><strong>Geri qaytarma</strong></td>
+                <td>Qeyri-mümkün</td>
+                <td>Mümkün</td>
+            </tr>
+            <tr>
+                <td><strong>Performans</strong></td>
+                <td>CASCADE əməliyyatlar ağır</td>
+                <td>Sadə UPDATE</td>
+            </tr>
+            <tr>
+                <td><strong>Audit</strong></td>
+                <td>Tarixçə itirilir</td>
+                <td>Tam tarixçə</td>
+            </tr>
+            <tr>
+                <td><strong>Baza həcmi</strong></td>
+                <td>Azalır</td>
+                <td>Artır</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>2.1. Hard Delete Nümunəsi</h3>
+    <div class="code-block"><code>-- İstifadəçini tamamilə sil
+DELETE FROM users WHERE id = 5;
+
+-- Nəticə: Məlumat bazadan yox olur, geri qaytarıla bilməz</code></div>
+
+    <h3>2.2. Soft Delete Nümunəsi</h3>
+    <div class="code-block"><code>-- İstifadəçini soft delete et
+UPDATE users 
+SET deleted_at = CURRENT_TIMESTAMP,
+    deleted_by = 1
+WHERE id = 5;
+
+-- Nəticə: Məlumat bazada qalır, ancaq "silinmiş" kimi işarələnir</code></div>
+
+    <h2>3. İstifadə Səbəbləri</h2>
+
+    <h3>3.1. Məlumat Təhlükəsizliyi və Bərpa</h3>
+    <p>İstifadəçilərin və ya sistemin etdiyi səhv əməliyyatları geri qaytarmaq imkanı. Məsələn, istifadəçi səhvən vacib məlumatı silsə, sistem administratoru həmin məlumatı asanlıqla bərpa edə bilər.</p>
+
+    <h3>3.2. Audit və Tarixçə (Audit Trail)</h3>
+    <p>Hüquqi və korporativ tələblər üçün vacibdir. Kim, nə vaxt, hansı məlumatı sildi - bütün bu informasiya saxlanılır və lazım olduqda təqdim edilə bilər.</p>
+
+    <h3>3.3. Referensial Bütövlük</h3>
+    <p>Əlaqəli məlumatların strukturunu pozmadan saxlamaq. Məsələn, istifadəçi silinərkən onun etdiyi sifarişlər, yazılar və digər əlaqəli məlumatlar qorunur.</p>
+
+    <h3>3.4. İş Prosesləri</h3>
+    <p>Mühasibatlıq, tibb, maliyyə sistemlərində məlumatın "silinməsi" əvəzinə "arxivləşdirilməsi" tələb olunur. Qanunvericilik bəzi məlumatların müəyyən müddət saxlanılmasını tələb edir.</p>
+
+    <h3>3.5. Performans</h3>
+    <p>CASCADE DELETE əməliyyatları çoxlu əlaqəli cədvəllərə toxunduğu üçün çox vaxt aparır. Soft delete sadəcə bir UPDATE olduğu üçün daha sürətlidir.</p>
+
+    <h2>4. Nəzəri Əsaslar</h2>
+
+    <h3>4.1. Tətbiq Üsulları</h3>
+
+    <h4>4.1.1. Boolean Flag (Ən Sadə Yanaşma)</h4>
+    <div class="code-block"><code>-- Cədvələ sütun əlavə et
+ALTER TABLE users ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE;
+
+-- İstifadə
+UPDATE users SET is_deleted = TRUE WHERE id = 5;
+SELECT * FROM users WHERE is_deleted = FALSE;</code></div>
+    
+    <div class="warning-box">
+        <strong>Məhdudiyyət:</strong> Silinmə tarixi və kim tərəfindən silindiyini bilmirik.
+    </div>
+
+    <h4>4.1.2. Timestamp (Daha İnformativ)</h4>
+    <div class="code-block"><code>-- Cədvələ sütun əlavə et
+ALTER TABLE users ADD COLUMN deleted_at TIMESTAMP NULL;
+
+-- İstifadə
+UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = 5;
+SELECT * FROM users WHERE deleted_at IS NULL;</code></div>
+    
+    <div class="success-box">
+        <strong>Üstünlük:</strong> Nə vaxt silindiyini bilirik, daha çevik sorğular yazmaq mümkündür.
+    </div>
+
+    <h4>4.1.3. Tam Audit (Tövsiyə Olunan)</h4>
+    <div class="code-block"><code>-- Cədvələ sütunlar əlavə et
+ALTER TABLE users ADD COLUMN deleted_at TIMESTAMP NULL;
+ALTER TABLE users ADD COLUMN deleted_by INTEGER REFERENCES users(id);
+
+-- İstifadə
+UPDATE users 
+SET deleted_at = CURRENT_TIMESTAMP,
+    deleted_by = 1
+WHERE id = 5;</code></div>
+    
+    <div class="success-box">
+        <strong>Üstünlük:</strong> Tam audit trail - nə vaxt və kim sildi.
+    </div>
+
+    <h3>4.2. İndeksləşdirmə Strategiyası</h3>
+    <p>Performans üçün çox vacibdir. Silinməmiş məlumatlar üçün partial index yaratmalıyıq:</p>
+    
+    <div class="code-block"><code>-- Aktiv istifadəçilər üçün index
+CREATE INDEX idx_active_users 
+ON users(id) 
+WHERE deleted_at IS NULL;
+
+-- Bu index yalnız deleted_at IS NULL olan sətirləri əhatə edir
+-- və sorğuları əhəmiyyətli dərəcədə sürətləndirir</code></div>
+
+    <h2>5. Praktiki Tətbiq</h2>
+
+    <h3>5.1. Cədvəl Strukturunun Yaradılması</h3>
+    <div class="code-block"><code>-- İstifadəçilər cədvəli
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    deleted_by INTEGER REFERENCES users(id)
+);
+
+-- Sifarişlər cədvəli
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    product_name VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+-- İndekslər
+CREATE INDEX idx_active_users ON users(id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_active_orders ON orders(id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_user_orders ON orders(user_id) WHERE deleted_at IS NULL;</code></div>
+
+    <h3>5.2. CRUD Əməliyyatları</h3>
+
+    <h4>5.2.1. CREATE (Yaratma)</h4>
+    <p>Yaratma əməliyyatı dəyişmir, adi INSERT istifadə olunur:</p>
+    <div class="code-block"><code>INSERT INTO users (username, email, password_hash) 
+VALUES ('ali_mammadov', 'ali@example.com', 'hashed_password_123');</code></div>
+
+    <h4>5.2.2. READ (Oxuma)</h4>
+    <p>Oxuma əməliyyatlarında mühüm dəyişiklik var - həmişə WHERE deleted_at IS NULL şərti əlavə etməliyik:</p>
+    <div class="code-block"><code>-- Yalnız aktiv istifadəçilər
+SELECT * FROM users WHERE deleted_at IS NULL;
+
+-- Bütün istifadəçilər (admin panel üçün)
+SELECT * FROM users;
+
+-- Silinmiş istifadəçilər
+SELECT * FROM users WHERE deleted_at IS NOT NULL;
+
+-- Son 7 gündə silinmiş istifadəçilər
+SELECT username, email, deleted_at
+FROM users
+WHERE deleted_at > CURRENT_TIMESTAMP - INTERVAL '7 days'
+ORDER BY deleted_at DESC;</code></div>
+
+    <h4>5.2.3. UPDATE (Yeniləmə)</h4>
+    <p>Yeniləmə zamanı yalnız aktiv məlumatları yeniləməliyik:</p>
+    <div class="code-block"><code>-- Email yenilə (yalnız aktiv istifadəçi üçün)
+UPDATE users 
+SET email = 'yeni_email@example.com', 
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = 5 AND deleted_at IS NULL;
+
+-- Şifrə dəyişdir
+UPDATE users 
+SET password_hash = 'new_hashed_password',
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = 5 AND deleted_at IS NULL;</code></div>
+
+    <h4>5.2.4. DELETE (Soft Delete)</h4>
+    <p>DELETE əvəzinə UPDATE istifadə edirik:</p>
+    <div class="code-block"><code>-- Sadə soft delete
+UPDATE users 
+SET deleted_at = CURRENT_TIMESTAMP
+WHERE id = 5;
+
+-- Tam audit ilə soft delete
+UPDATE users 
+SET deleted_at = CURRENT_TIMESTAMP,
+    deleted_by = 1  -- silən istifadəçinin ID-si
+WHERE id = 5 AND deleted_at IS NULL;
+
+-- Şərtli soft delete (yalnız aktiv olarsa)
+UPDATE users 
+SET deleted_at = CURRENT_TIMESTAMP,
+    deleted_by = 1
+WHERE id = 5 
+  AND deleted_at IS NULL
+  AND status = 'active';</code></div>
+
+    <h3>5.3. Geri Qaytarma (Restore)</h3>
+    <div class="code-block"><code>-- Sadə restore
+UPDATE users 
+SET deleted_at = NULL,
+    deleted_by = NULL
+WHERE id = 5;
+
+-- Audit ilə restore
+UPDATE users 
+SET deleted_at = NULL,
+    deleted_by = NULL,
+    restored_at = CURRENT_TIMESTAMP,
+    restored_by = 2
+WHERE id = 5;</code></div>
+
+    <h3>5.4. VIEW-lar (İşi Asanlaşdırma)</h3>
+    <p>Hər dəfə WHERE deleted_at IS NULL yazmamaq üçün VIEW-lar yaratmaq məsləhətdir:</p>
+    <div class="code-block"><code>-- Aktiv istifadəçilər view
+CREATE VIEW active_users AS
+SELECT id, username, email, created_at, updated_at
+FROM users
+WHERE deleted_at IS NULL;
+
+-- Aktiv sifarişlər view
+CREATE VIEW active_orders AS
+SELECT o.id, o.user_id, u.username, o.product_name, o.amount
+FROM orders o
+JOIN users u ON o.user_id = u.id
+WHERE o.deleted_at IS NULL AND u.deleted_at IS NULL;
+
+-- İndi sadə sorğular:
+SELECT * FROM active_users;
+SELECT * FROM active_orders WHERE user_id = 5;</code></div>
+
+    <h3>5.5. Trigger-lər (Avtomatlaşdırma)</h3>
+    <p>İstifadəçi silinəndə onun sifarişlərini də avtomatik soft delete etmək:</p>
+    <div class="code-block"><code>-- Trigger funksiyası
+CREATE OR REPLACE FUNCTION soft_delete_user_orders()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- İstifadəçi soft delete ediləndə
+    IF NEW.deleted_at IS NOT NULL AND OLD.deleted_at IS NULL THEN
+        -- Onun bütün sifarişlərini də soft delete et
+        UPDATE orders 
+        SET deleted_at = NEW.deleted_at
+        WHERE user_id = NEW.id 
+          AND deleted_at IS NULL;
+    END IF;
+    
+    -- İstifadəçi restore ediləndə
+    IF NEW.deleted_at IS NULL AND OLD.deleted_at IS NOT NULL THEN
+        -- Onun sifarişlərini də restore et
+        UPDATE orders 
+        SET deleted_at = NULL
+        WHERE user_id = NEW.id 
+          AND deleted_at = OLD.deleted_at;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger yaradılması
+CREATE TRIGGER trigger_soft_delete_orders
+AFTER UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION soft_delete_user_orders();</code></div>
+
+    <h3>5.6. Praktiki Sorğu Nümunələri</h3>
+    <div class="code-block"><code>-- 1. Son 30 gündə silinmiş istifadəçilər
+SELECT username, email, deleted_at, deleted_by
+FROM users
+WHERE deleted_at > CURRENT_TIMESTAMP - INTERVAL '30 days'
+ORDER BY deleted_at DESC;
+
+-- 2. Hansı istifadəçi ən çox silinmə əməliyyatı edib?
+SELECT 
+    u.username,
+    COUNT(*) as deleted_count
+FROM users u1
+JOIN users u2 ON u1.id = u2.deleted_by
+WHERE u2.deleted_at IS NOT NULL
+GROUP BY u.username
+ORDER BY deleted_count DESC;
+
+-- 3. Aktiv istifadəçilərin aktiv sifarişləri
+SELECT 
+    u.username, 
+    o.product_name, 
+    o.amount,
+    o.created_at
+FROM users u
+JOIN orders o ON u.id = o.user_id
+WHERE u.deleted_at IS NULL 
+  AND o.deleted_at IS NULL
+ORDER BY o.created_at DESC;
+
+-- 4. İstifadəçi statistikası (aktiv və silinmiş)
+SELECT 
+    COUNT(*) FILTER (WHERE deleted_at IS NULL) as active_users,
+    COUNT(*) FILTER (WHERE deleted_at IS NOT NULL) as deleted_users,
+    COUNT(*) as total_users
+FROM users;
+
+-- 5. Ən çox silinən məhsullar
+SELECT 
+    product_name,
+    COUNT(*) as delete_count
+FROM orders
+WHERE deleted_at IS NOT NULL
+GROUP BY product_name
+ORDER BY delete_count DESC
+LIMIT 10;</code></div>
+
+    <h2>6. Mürəkkəb Ssenarilər</h2>
+
+    <h3>6.1. Unique Constraint Problemi</h3>
+    <p>Soft delete istifadə edərkən ən çox rast gəlinən problem - unique constraint ilə bağlıdır:</p>
+    
+    <div class="warning-box">
+        <strong>Problem:</strong> İstifadəçi silindikdən sonra eyni email ilə yeni istifadəçi yaratmaq olmur.
+    </div>
+    
+    <div class="code-block"><code>-- Səhv yanaşma (işləməyəcək)
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    deleted_at TIMESTAMP NULL
+);
+
+-- Problem: ali@example.com silindikdən sonra
+-- yenidən ali@example.com yaratmaq olmur</code></div>
+
+    <h4>Həll Yolları:</h4>
+    <div class="code-block"><code>-- Həll 1: Partial Unique Index (Ən yaxşı)
+CREATE UNIQUE INDEX idx_unique_active_email 
+ON users(email) 
+WHERE deleted_at IS NULL;
+
+-- İndi silinmiş email yenidən istifadə edilə bilər
+
+
+-- Həll 2: Email-ə timestamp əlavə et
+UPDATE users 
+SET email = email || '_deleted_' || EXTRACT(EPOCH FROM deleted_at),
+    deleted_at = CURRENT_TIMESTAMP
+WHERE id = 5;
+
+
+-- Həll 3: Xüsusi logic
+CREATE UNIQUE INDEX idx_email_deleted 
+ON users(email, COALESCE(deleted_at, '9999-12-31'));</code></div>
+
+    <h3>6.2. Permanent Delete (Həqiqi Silinmə)</h3>
+    <p>Bəzən köhnə məlumatları tamamilə silmək lazımdır (məsələn, GDPR tələbləri):</p>
+    <div class="code-block"><code>-- 1 ildən köhnə soft deleted məlumatları sil
+DELETE FROM users 
+WHERE deleted_at < CURRENT_TIMESTAMP - INTERVAL '1 year';
+
+-- Və ya əvvəlcə arxivə köçür
+INSERT INTO users_archive 
+SELECT * FROM users 
+WHERE deleted_at < CURRENT_TIMESTAMP - INTERVAL '1 year';
+
+DELETE FROM users 
+WHERE deleted_at < CURRENT_TIMESTAMP - INTERVAL '1 year';
+
+-- Scheduled job yaratmaq (PostgreSQL)
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+SELECT cron.schedule(
+    'cleanup-old-deleted-users',
+    '0 2 * * 0',  -- Hər bazar günü saat 02:00
+    $$DELETE FROM users 
+      WHERE deleted_at < CURRENT_TIMESTAMP - INTERVAL '1 year'$$
+);</code></div>
+
+    <h3>6.3. Stored Procedure (Tam Funksionallıq)</h3>
+    <div class="code-block"><code>-- Kompleks soft delete funksiyası
+CREATE OR REPLACE FUNCTION soft_delete_user(
+    p_user_id INTEGER,
+    p_deleted_by INTEGER
+)
+RETURNS TABLE(
+    success BOOLEAN, 
+    message TEXT
+) AS $$
+DECLARE
+    v_user_exists BOOLEAN;
+    v_already_deleted BOOLEAN;
+BEGIN
+    -- Yoxla: istifadəçi mövcuddur?
+    SELECT EXISTS(
+        SELECT 1 FROM users WHERE id = p_user_id
+    ) INTO v_user_exists;
+    
+    IF NOT v_user_exists THEN
+        RETURN QUERY SELECT FALSE, 'İstifadəçi tapılmadı';
+        RETURN;
+    END IF;
+    
+    -- Yoxla: artıq silinib?
+    SELECT EXISTS(
+        SELECT 1 FROM users 
+        WHERE id = p_user_id 
+          AND deleted_at IS NOT NULL
+    ) INTO v_already_deleted;
+    
+    IF v_already_deleted THEN
+        RETURN QUERY SELECT FALSE, 'İstifadəçi artıq silinib';
+        RETURN;
+    END IF;
+    
+    -- Soft delete əməliyyatı
+    UPDATE users 
+    SET deleted_at = CURRENT_TIMESTAMP,
+        deleted_by = p_deleted_by
+    WHERE id = p_user_id;
+    
+    RETURN QUERY SELECT TRUE, 'İstifadəçi uğurla silindi';
+END;
+$$ LANGUAGE plpgsql;
+
+-- İstifadə nümunəsi:
+SELECT * FROM soft_delete_user(5, 1);
+
+-- Restore funksiyası
+CREATE OR REPLACE FUNCTION restore_user(
+    p_user_id INTEGER,
+    p_restored_by INTEGER
+)
+RETURNS TABLE(
+    success BOOLEAN, 
+    message TEXT
+) AS $$
+BEGIN
+    IF NOT EXISTS(
+        SELECT 1 FROM users 
+        WHERE id = p_user_id 
+          AND deleted_at IS NOT NULL
+    ) THEN
+        RETURN QUERY SELECT FALSE, 'İstifadəçi tapılmadı və ya aktiv';
+        RETURN;
+    END IF;
+    
+    UPDATE users 
+    SET deleted_at = NULL,
+        deleted_by = NULL,
+        restored_at = CURRENT_TIMESTAMP,
+        restored_by = p_restored_by
+    WHERE id = p_user_id;
+    
+    RETURN QUERY SELECT TRUE, 'İstifadəçi uğurla bərpa edildi';
+END;
+$$ LANGUAGE plpgsql;</code></div>
+
+    <h2>7. Üstünlük və Mənfi Tərəflər</h2>
+
+    <div class="pros-cons">
+        <div class="pros">
+            <h4>✅ Üstünlüklər</h4>
+            <ul>
+                <li>Məlumat itkisi riski yoxdur</li>
+                <li>Geri qaytarma mümkündür</li>
+                <li>Tam audit trail mövcuddur</li>
+                <li>Referensial əlaqələr qorunur</li>
+                <li>GDPR və compliance uyğunluq</li>
+                <li>CASCADE DELETE problemləri yoxdur</li>
+                <li>Performans üstünlükləri (bəzi hallarda)</li>
+                <li>Tarixçə və analitika üçün ideal</li>
+            </ul>
+        </div>
+        
+        <div class="cons">
+            <h4>❌ Mənfi Tərəflər</h4>
+            <ul>

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL İndekslər və Performans Optimizasiyası</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: white;
+            padding: 40px;
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #667eea;
+            border-radius: 5px;
+        }
+        
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .toc ol {
+            margin-left: 20px;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .code-block code {
+            display: block;
+            white-space: pre;
+        }
+        
+        .keyword { color: #c678dd; font-weight: bold; }
+        .string { color: #98c379; }
+        .comment { color: #5c6370; font-style: italic; }
+        .function { color: #61afef; }
+        .number { color: #d19a66; }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box strong {
+            color: #1976d2;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box strong {
+            color: #f57c00;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box strong {
+            color: #2e7d32;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        
+        .danger-box strong {
+            color: #c62828;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background: #e3f2fd;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        
+        .visual-diagram {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .metric-card h4 {
+            color: white;
+            margin: 0 0 10px 0;
+        }
+        
+        .metric-card .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 3px solid #667eea;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+        
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .example-box {
+            background: #fff9e6;
+            border: 2px dashed #ffc107;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 5px;
+        }
+        
+        .example-box h4 {
+            color: #f57f17;
+            margin-top: 0;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            
+            .download-btn {
+                display: none;
+            }
+            
+            h2 {
+                page-break-after: avoid;
+            }
+            
+            .code-block, .info-box, .warning-box, .visual-diagram {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="window.print()">📄 PDF Yüklə</button>
+    
+    <div class="header">
+        <h1>SQL İndekslər və Performans Optimizasiyası</h1>
+        <div class="subtitle">Dərin Nəzəri və Praktiki Bələdçi</div>
+    </div>
+
+    <div class="toc">
+        <h2>📋 Mündəricat</h2>
+        <ol>
+            <li>İndeks Nədir və Necə İşləyir</li>
+            <li>İndeks Növləri (B-Tree, Hash, GiST, GIN, BRIN)</li>
+            <li>Nə Vaxt İndeks Lazımdır</li>
+            <li>EXPLAIN və EXPLAIN ANALYZE</li>
+            <li>Query Optimization Strategiyaları</li>
+            <li>İndeks Strategiyaları</li>
+            <li>Clustered vs Non-clustered İndekslər</li>
+            <li>Praktiki Nümunələr və Case Study</li>
+            <li>Performance Tuning Best Practices</li>
+        </ol>
+    </div>
+
+    <h2>1. İndeks Nədir və Necə İşləyir?</h2>
+    
+    <p><strong>İndeks</strong> - verilənlər bazasında məlumatların sürətli axtarışı üçün yaradılan xüsusi data strukturudur. Kitabın arxasındaki indeks kimi, SQL indeksi də məlumatın harada olduğunu göstərir və axtarışı sürətləndirir.</p>
+
+    <div class="info-box">
+        <strong>💡 Nümunə:</strong>
+        Kitabxanada kitab axtarırıq. İki yol var:<br>
+        1. <strong>İndeks olmadan:</strong> Hər rəfi, hər kitabı tək-tək yoxlayırıq (Table Scan)<br>
+        2. <strong>İndeks ilə:</strong> Kataloqa baxıb dərhal lazımi rəfə gedirik (Index Scan)
+    </div>
+    <div class="info-box">
+        <strong>💡 Nümunə:</strong>
+        Kitabxanada 100,000 kitab var. Müəllif adına görə kitab axtarırsınız:<br><br>
+        <strong>İndeks olmadan:</strong> Hər rəfə gedib, hər kitabı açıb müəllif adını yoxlayırsınız. 2-3 saat çəkər.<br><br>
+        <strong>İndeks ilə:</strong> Kataloqa (indeksə) baxırsınız: "Dostoyevski → Rəf 45, Sıra 12". Birbaşa gedib kitabı götürürsünüz. 2 dəqiqə çəkər.
+    </div>
+
+    <h3>1.1. İndeksin İş Prinsipi</h3>
+    
+    <p>SQL verilənlər bazasında məlumat <strong>heap</strong> adlanan strukturda saxlanılır - sətir əlavə olunduqca ardıcıl yazılır. Əgər 1 milyon sətirli cədvəldə email="test@example.com" olan istifadəçini axtarsaq:</p>
+
+    <div class="code-block"><code><span class="comment">-- İndeks olmadan:</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'test@example.com'</span>;
+
+<span class="comment">-- Nə baş verir?</span>
+<span class="comment">-- 1. Sətir 1-i oxu: email yoxla → uyğun deyil</span>
+<span class="comment">-- 2. Sətir 2-ni oxu: email yoxla → uyğun deyil</span>
+<span class="comment">-- 3. Sətir 3-ü oxu: email yoxla → uyğun deyil</span>
+<span class="comment">-- ...</span>
+<span class="comment">-- 750,000. Sətir 750000-i oxu: email yoxla → uyğundur! ✅</span>
+<span class="comment">-- Vaxt: 750,000 disk oxuma əməliyyatı ≈ 2.5 saniyə</span></code></div>
+
+    <div class="code-block"><code><span class="comment">-- İndeks ilə:</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email <span class="keyword">ON</span> users(email);
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'test@example.com'</span>;
+
+<span class="comment">-- Nə baş verir?</span>
+<span class="comment">-- 1. İndeksə bax (B-Tree strukturu)</span>
+<span class="comment">-- 2. Binary search ilə 'test@example.com' tap</span>
+<span class="comment">-- 3. İndeks pointer göstərir: Səhifə 1458, Sətir 12</span>
+<span class="comment">-- 4. Birbaşa həmin sətri oxu</span>
+<span class="comment">-- Vaxt: log₂(1,000,000) ≈ 20 əməliyyat ≈ 0.003 saniyə</span>
+<span class="comment">-- 833x daha sürətli! 🚀</span></code></div>
+
+    <h3>1.1. İndeksin Daxili Strukturu</h3>
+    
+    <p>İndeks iki əsas komponentdən ibarətdir:</p>
+    <ul>
+        <li><strong>Search Key:</strong> İndeksləşdirilən sütun(lar)ın dəyərləri</li>
+        <li><strong>Data Pointer:</strong> Həmin dəyərin cədvəldə yerləşdiyi ünvan (page ID, row ID)</li>
+    </ul>
+
+       <h3>1.2. İndeksin Daxili Strukturu</h3>
+
+    <p>İndeks iki əsas hissədən ibarətdir:</p>
+
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Komponent</th>
+                <th>Təyinatı</th>
+                <th>Nümunə</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Search Key</strong></td>
+                <td>İndeksləşdirilən sütunun dəyəri</td>
+                <td>'ali@example.com'</td>
+            </tr>
+            <tr>
+                <td><strong>Pointer (CTID)</strong></td>
+                <td>Həmin dəyərin cədvəldə fiziki ünvanı</td>
+                <td>(page=1458, offset=12)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="visual-diagram">
+        <h4>📊 İndeks və Heap Əlaqəsi</h4>
+        <pre>
+INDEX (B-Tree):                    HEAP TABLE:
+    Root                           Page 1: [Row 1, Row 2, Row 3...]
+   /    \                          Page 2: [Row 4, Row 5, Row 6...]
+Branch  Branch                     ...
+ /  \    /  \                      Page 1458: [Row 1-12: test@...]
+Leaf Leaf Leaf Leaf                ...
+ |    |    |    |                  Page 3000: [Row 999998-1000000]
+ ↓    ↓    ↓    ↓
+Pointer to Heap → (Page, Offset)
+        </pre>
+    </div>
+
+    <h3>1.3. İndeks Yaratmaq və Silmək</h3>
+
+    <div class="code-block"><code><span class="comment">-- Sadə index yaratmaq</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email <span class="keyword">ON</span> users(email);
+
+<span class="comment">-- Unique index (dublikat olmaz)</span>
+<span class="keyword">CREATE UNIQUE INDEX</span> idx_users_email_unique <span class="keyword">ON</span> users(email);
+
+<span class="comment">-- Composite index (çoxsütunlu)</span>
+<span class="keyword">CREATE INDEX</span> idx_users_name <span class="keyword">ON</span> users(lastname, firstname);
+
+<span class="comment">-- Partial index (şərtli)</span>
+<span class="keyword">CREATE INDEX</span> idx_active_users <span class="keyword">ON</span> users(email) <span class="keyword">WHERE</span> is_active = <span class="keyword">TRUE</span>;
+
+<span class="comment">-- Functional index (funksiyanı indeksləşdir)</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email_lower <span class="keyword">ON</span> users(<span class="function">LOWER</span>(email));
+
+<span class="comment">-- Index silmək</span>
+<span class="keyword">DROP INDEX</span> idx_users_email;
+
+<span class="comment">-- Index məlumatlarını yeniləmək</span>
+<span class="keyword">REINDEX INDEX</span> idx_users_email;</code></div>
+
+    <div class="code-block"><code><span class="comment">-- Sadə index yaratmaq</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email 
+<span class="keyword">ON</span> users(email);
+
+<span class="comment">-- Bu nə edir?</span>
+<span class="comment">-- 1. users cədvəlindəki bütün email dəyərlərini götürür</span>
+<span class="comment">-- 2. Onları sıralayır (sort edir)</span>
+<span class="comment">-- 3. Hər email üçün pointer (ünvan) saxlayır</span>
+<span class="comment">-- 4. Ayrıca data struktur (B-Tree) yaradır</span></code></div>
+
+    <h3>1.4. İndeks Olmadan vs İndeks İlə Axtarış</h3>
+
+    <div class="visual-diagram">
+        <h4>🔍 Sequential Scan (İndeks Yoxdur)</h4>
+        <p>Table: [Row1] → [Row2] → [Row3] → ... → [Row 1,000,000]</p>
+        <p><strong>Vaxt:</strong> O(n) - Hər sətri yoxlamaq lazımdır</p>
+    </div>
+
+    <div class="visual-diagram">
+        <h4>⚡ Index Scan (İndeks Var)</h4>
+        <p>B-Tree İndeks → Sürətli axtarış → Birbaşa lazımi sətrə keçid</p>
+        <p><strong>Vaxt:</strong> O(log n) - Yalnız ağac səviyyələrini keçmək lazımdır</p>
+    </div>
+
+    <div class="performance-metrics">
+        <div class="metric-card">
+            <h4>İndeks Olmadan</h4>
+            <div class="value">2.5 san</div>
+            <p>1M sətirli cədvəldə axtarış</p>
+        </div>
+        <div class="metric-card">
+            <h4>İndeks İlə</h4>
+            <div class="value">0.003 san</div>
+            <p>1M sətirli cədvəldə axtarış</p>
+        </div>
+        <div class="metric-card">
+            <h4>Sürətlənmə</h4>
+            <div class="value">833x</div>
+            <p>Performans artımı</p>
+        </div>
+    </div>
+
+    <h2>2. İndeks Növləri - Dərin Təhlil</h2>
+
+    <h3>2.1. B-Tree İndeks (Default və Ən Populyar)</h3>
+
+    <p><strong>B-Tree</strong> (Balanced Tree) - özünü balanslayan ağac strukturudur. SQL-də default index tipidir.</p>
+
+    <div class="info-box">
+        <strong>🌲 B-Tree Strukturu:</strong>
+        B-Tree çoxsəviyyəli ağacdır. Hər node (qovşaq) çoxlu key saxlayır və sıralı saxlanılır.
+    </div>
+
+    <h4>B-Tree Necə İşləyir?</h4>
+
+    <div class="code-block"><code><span class="comment">-- Məsələn: 1 milyon istifadəçi, ID ilə axtarış</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">750000</span>;
+
+<span class="comment">-- B-Tree İndeks olduqda:</span>
+<span class="comment">-- Səviyyə 1 (Root):     [500000]</span>
+<span class="comment">--                     /        \</span>
+<span class="comment">-- Səviyyə 2:   [250000]      [750000]</span>
+<span class="comment">--                              /    \</span>
+<span class="comment">-- Səviyyə 3:            [625000] [875000]</span>
+<span class="comment">--                          /</span>
+<span class="comment">-- Səviyyə 4 (Leaf):   [749999, 750000, 750001...]</span>
+
+<span class="comment">-- Yalnız 4 addımda tapırıq (log₂ 1,000,000 ≈ 20 addım)</span></code></div>
+
+
+    <p><strong>B-Tree (Balanced Tree)</strong> SQL-də ən geniş yayılmış və default index tipidir. "Balanced" sözü burada çox vacibdir - ağac həmişə balanslaşdırılır, yəni hər leaf node eyni dərinlikdədir.</p>
+
+    <h4>2.1.1. B-Tree Strukturu və İş Prinsipi</h4>
+
+    <p>B-Tree çoxsəviyyəli ağac strukturudur. Hər node çoxlu key saxlayır və child pointer-lər var. PostgreSQL-də default B-Tree order = 128 (hər node-da max 128 key).</p>
+
+    <div class="visual-diagram">
+        <h4>🌳 B-Tree Strukturu (Sadələşdirilmiş)</h4>
+        <pre>
+                    [50, 100, 150]           ← Root Node
+                   /    |     |    \
+        [10, 20, 30] [60, 70] [110, 120] [160, 170, 180]  ← Internal Nodes
+         /  |  |  \    /   \    /    \     /    |    |   \
+      Data Pointers to Heap Pages               ← Leaf Nodes
+      (Actual row locations)
+        </pre>
+        <p><strong>Əsas Prinsip:</strong> Hər node-da key-lər sıralıdır. Sol child < key < Sağ child</p>
+    </div>
+
+    <div class="code-block"><code><span class="comment">-- Gəlin 1 milyon sətirli cədvəldə ID axtarışı edək</span>
+<span class="keyword">CREATE TABLE</span> users (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,  <span class="comment">-- Avtomatik B-Tree index yaradır</span>
+    email <span class="keyword">VARCHAR</span>(<span class="number">255</span>),
+    name <span class="keyword">VARCHAR</span>(<span class="number">100</span>)
+);
+
+<span class="comment">-- 1M sətir əlavə edək</span>
+<span class="keyword">INSERT INTO</span> users (email, name)
+<span class="keyword">SELECT</span> 
+    <span class="string">'user'</span> || i || <span class="string">'@example.com'</span>,
+    <span class="string">'User '</span> || i
+<span class="keyword">FROM</span> <span class="function">generate_series</span>(<span class="number">1</span>, <span class="number">1000000</span>) <span class="keyword">AS</span> i;
+
+<span class="comment">-- İndi ID ilə axtaraq</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">750000</span>;
+
+<span class="comment">-- B-Tree necə işləyir:
+-- 1. Root node-a get: [1, 250000, 500000, 750000, 1000000]
+--    750000 axtarırıq → 4-cü bölməyə get
+-- 2. Internal node: [750000, 812500, 875000, 937500]
+--    750000 axtarırıq → 1-ci bölməyə get
+-- 3. Leaf node: [750000] → Pointer: (page=1458, offset=12)
+-- 4. Heap page 1458-i oxu, offset 12-dəki sətri gətir
+-- Cəmi 4 disk I/O! (Sequential scan olsaydı 750,000 I/O)</span></code></div>
+
+
+    <h4>B-Tree Üstünlükləri:</h4>
+    <ul>
+        <li>✅ Equality axtarış: <code>WHERE id = 100</code></li>
+        <li>✅ Range axtarış: <code>WHERE age BETWEEN 20 AND 30</code></li>
+        <li>✅ Ordering: <code>ORDER BY name</code></li>
+        <li>✅ Pattern matching (prefix): <code>WHERE name LIKE 'Ali%'</code></li>
+        <li>✅ MIN/MAX funksiyaları sürətli işləyir</li>
+    </ul>
+
+    <div class="code-block"><code><span class="comment">-- B-Tree index yaratmaq (default)</span>
+<span class="keyword">CREATE INDEX</span> idx_users_lastname <span class="keyword">ON</span> users(lastname);
+
+<span class="comment">-- və ya explicit</span>
+<span class="keyword">CREATE INDEX</span> idx_users_lastname <span class="keyword">ON</span> users <span class="keyword">USING</span> btree(lastname);
+
+<span class="comment">-- Composite B-Tree index</span>
+<span class="keyword">CREATE INDEX</span> idx_users_name <span class="keyword">ON</span> users(lastname, firstname);
+
+<span class="comment">-- Bu index bu sorğular üçün işləyir:</span>
+<span class="keyword">WHERE</span> lastname = <span class="string">'Mammadov'</span>  <span class="comment">-- ✅ İşləyir</span>
+<span class="keyword">WHERE</span> lastname = <span class="string">'Mammadov'</span> <span class="keyword">AND</span> firstname = <span class="string">'Ali'</span>  <span class="comment">-- ✅ İşləyir</span>
+<span class="keyword">WHERE</span> firstname = <span class="string">'Ali'</span>  <span class="comment">-- ❌ İşləməz (left-most rule)</span></code></div>
+
+    <div class="warning-box">
+        <strong>⚠️ B-Tree Məhdudiyyəti:</strong>
+        Composite index-də sütunların sırası vacibdir! (lastname, firstname) indexi firstname-lə başlayan sorğu üçün istifadə edilə bilməz.
+    </div>
+
+    <h3>2.2. Hash İndeks</h3>
+
+    <p><strong>Hash İndeks</strong> - hash funksiyası istifadə edərək məlumatı saxlayır. Yalnız equality (=) sorğuları üçün effektivdir.</p>
+
+    <div class="info-box">
+        <strong>🔢 Hash Funksiyası:</strong>
+        Hash funksiyası hər dəyərə unique (və ya az collision olan) nömrə verir. Məsələn: hash('ali@example.com') = 34567
+    </div>
+
+    <h4>Hash İndeks Üstünlükləri:</h4>
+    <ul>
+        <li>✅ Equality axtarış çox sürətli: O(1)</li>
+        <li>✅ Daha az disk space tutur</li>
+        <li>✅ Memory cache üçün ideal</li>
+    </ul>
+
+    <h4>Hash İndeks Məhdudiyyətləri:</h4>
+    <ul>
+        <li>❌ Range query işləməz: <code>WHERE age > 25</code></li>
+        <li>❌ LIKE işləməz: <code>WHERE name LIKE 'Ali%'</code></li>
+        <li>❌ ORDER BY istifadə edə bilməz</li>
+        <li>❌ MIN/MAX slow</li>
+    </ul>
+
+    <div class="code-block"><code><span class="comment">-- Hash index yaratmaq (PostgreSQL)</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email_hash 
+<span class="keyword">ON</span> users <span class="keyword">USING</span> hash(email);
+
+<span class="comment">-- Bu sorğu üçün perfect:</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'ali@example.com'</span>;  <span class="comment">-- ⚡ O(1)</span>
+
+<span class="comment">-- Bu sorğular üçün faydasız:</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email <span class="keyword">LIKE</span> <span class="string">'ali%'</span>;  <span class="comment">-- ❌ Full scan</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">ORDER BY</span> email;  <span class="comment">-- ❌ Sort lazım</span></code></div>
+
+    <div class="example-box">
+        <h4>📌 Nə Vaxt Hash İstifadə Etmək Lazımdır?</h4>
+        <ul>
+            <li>Yalnız equality axtarışlar (=) edirsiniz</li>
+            <li>Unique identifier-lər (UUID, hash codes)</li>
+            <li>Session keys, API tokens</li>
+            <li>Lookup tables</li>
+        </ul>
+    </div>
+
+    <h3>2.3. GiST İndeks (Generalized Search Tree)</h3>
+
+    <p><strong>GiST</strong> - universal index strukturudur, müxtəlif data tipləri üçün custom axtarış yaratmağa imkan verir.</p>
+
+    <h4>GiST İstifadə Sahələri:</h4>
+    <ul>
+        <li>🗺️ <strong>Geometric data:</strong> Points, polygons, circles</li>
+        <li>🔍 <strong>Full-text search:</strong> Text axtarış</li>
+        <li>🌐 <strong>IP address ranges:</strong> Network axtarışları</li>
+        <li>📅 <strong>Range types:</strong> Date/time ranges</li>
+    </ul>
+
+    <div class="code-block"><code><span class="comment">-- Geometric data üçün GiST</span>
+<span class="keyword">CREATE TABLE</span> locations (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,
+    name <span class="keyword">VARCHAR</span>(<span class="number">100</span>),
+    coordinates <span class="keyword">POINT</span>
+);
+
+<span class="keyword">CREATE INDEX</span> idx_locations_coords 
+<span class="keyword">ON</span> locations <span class="keyword">USING</span> gist(coordinates);
+
+<span class="comment">-- Yaxın yerləri tap</span>
+<span class="keyword">SELECT</span> name 
+<span class="keyword">FROM</span> locations 
+<span class="keyword">WHERE</span> coordinates <@ circle <span class="string">'&lt;(0,0),10&gt;'</span>;
+
+<span class="comment">-- IP range axtarışı</span>
+<span class="keyword">CREATE TABLE</span> ip_ranges (
+    range inet
+);
+
+<span class="keyword">CREATE INDEX</span> idx_ip_ranges <span class="keyword">ON</span> ip_ranges <span class="keyword">USING</span> gist(range);
+
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ip_ranges <span class="keyword">WHERE</span> range >> inet <span class="string">'192.168.1.5'</span>;</code></div>
+
+    <h3>2.4. GIN İndeks (Generalized Inverted Index)</h3>
+
+    <p><strong>GIN</strong> - əsasən composite values (array, JSON, full-text) üçün istifadə olunur.</p>
+
+    <h4>GIN İstifadə Sahələri:</h4>
+    <ul>
+        <li>📝 <strong>Full-text search:</strong> Mətn axtarışı</li>
+        <li>🏷️ <strong>Array columns:</strong> Array elementlərində axtarış</li>
+        <li>📄 <strong>JSONB:</strong> JSON data axtarışı</li>
+        <li>🔗 <strong>Many-to-many relationships:</strong> Tag sistemləri</li>
+    </ul>
+
+    <div class="code-block"><code><span class="comment">-- Array column üçün GIN</span>
+<span class="keyword">CREATE TABLE</span> posts (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,
+    title <span class="keyword">TEXT</span>,
+    tags <span class="keyword">TEXT[]</span>
+);
+
+<span class="keyword">CREATE INDEX</span> idx_posts_tags <span class="keyword">ON</span> posts <span class="keyword">USING</span> gin(tags);
+
+<span class="comment">-- Tag-a görə axtarış - çox sürətli</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> posts <span class="keyword">WHERE</span> tags @> <span class="keyword">ARRAY</span>[<span class="string">'sql'</span>, <span class="string">'database'</span>];
+
+<span class="comment">-- JSONB üçün GIN</span>
+<span class="keyword">CREATE TABLE</span> users (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,
+    data <span class="keyword">JSONB</span>
+);
+
+<span class="keyword">CREATE INDEX</span> idx_users_data <span class="keyword">ON</span> users <span class="keyword">USING</span> gin(data);
+
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> data @> <span class="string">'{"country": "Azerbaijan"}'</span>;
+
+<span class="comment">-- Full-text search</span>
+<span class="keyword">CREATE INDEX</span> idx_posts_search 
+<span class="keyword">ON</span> posts <span class="keyword">USING</span> gin(to_tsvector(<span class="string">'english'</span>, title));
+
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> posts 
+<span class="keyword">WHERE</span> to_tsvector(<span class="string">'english'</span>, title) @@ to_tsquery(<span class="string">'database & optimization'</span>);</code></div>
+
+    <div class="success-box">
+        <strong>✅ GIN Performance:</strong>
+        GIN index böyük ola bilər, amma axtarış çox sürətlidir. Write əməliyyatları yavaş ola bilər (index update).
+    </div>
+
+    <h3>2.5. BRIN İndeks (Block Range Index)</h3>
+
+    <p><strong>BRIN</strong> - çox böyük cədvəllər üçün kiçik footprint olan indexdir. Physical storage order istifadə edir.</p>
+
+    <div class="info-box">
+        <strong>💾 BRIN Prinsipi:</strong>
+        BRIN hər sətr üçün deyil, hər block (page) üçün min/max dəyərləri saxlayır. Çox kiçik, amma yalnız sorted data üçün effektiv.
+    </div>
+
+    <h4>BRIN Üstünlükləri:</h4>
+    <ul>
+        <li>✅ Çox kiçik index size (B-Tree-dən 100x-1000x kiçik)</li>
+        <li>✅ İnsert/Update sürətli</li>
+        <li>✅ Böyük time-series data üçün ideal</li>
+    </ul>
+
+    <div class="code-block"><code><span class="comment">-- Time-series data üçün BRIN</span>
+<span class="keyword">CREATE TABLE</span> sensor_data (
+    id <span class="keyword">BIGSERIAL PRIMARY KEY</span>,
+    sensor_id <span class="keyword">INTEGER</span>,
+    temperature <span class="keyword">DECIMAL</span>(<span class="number">5</span>,<span class="number">2</span>),
+    recorded_at <span class="keyword">TIMESTAMP</span>
+);
+
+<span class="comment">-- BRIN index - çox kiçik, recorded_at naturally sorted olduğu üçün</span>
+<span class="keyword">CREATE INDEX</span> idx_sensor_recorded 
+<span class="keyword">ON</span> sensor_data <span class="keyword">USING</span> brin(recorded_at);
+
+<span class="comment">-- Range query effektiv</span>
+<span class="keyword">SELECT</span> <span class="function">AVG</span>(temperature) 
+<span class="keyword">FROM</span> sensor_data 
+<span class="keyword">WHERE</span> recorded_at <span class="keyword">BETWEEN</span> <span class="string">'2024-01-01'</span> <span class="keyword">AND</span> <span class="string">'2024-01-31'</span>;</code></div>
+
+    <div class="warning-box">
+        <strong>⚠️ BRIN Məhdudiyyəti:</strong>
+        BRIN yalnız physically sorted data üçün yaxşıdır. Random insert-lər olan cədvəllər üçün effektiv deyil.
+    </div>
+
+    <h3>2.6. İndeks Növləri Müqayisəsi</h3>
+
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>İndeks Tipi</th>
+                <th>İstifadə Sahəsi</th>
+                <th>Equality</th>
+                <th>Range</th>
+                <th>ORDER BY</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>B-Tree</strong></td>
+                <td>Universal, default</td>
+                <td>✅ O(log n)</td>
+                <td>✅ Yaxşı</td>
+                <td>✅ Yaxşı</td>
+                <td>Orta</td>
+            </tr>
+            <tr>
+                <td><strong>Hash</strong></td>
+                <td>Equality only</td>
+                <td>✅ O(1)</td>
+                <td>❌ Yox</td>
+                <td>❌ Yox</td>
+                <td>Kiçik</td>
+            </tr>
+            <tr>
+                <td><strong>GiST</strong></td>
+                <td>Geo, custom types</td>
+                <td>✅ Var</td>
+                <td>✅ Var</td>
+                <td>⚠️ Dəstək var</td>
+                <td>Böyük</td>
+            </tr>
+            <tr>
+                <td><strong>GIN</strong></td>
+                <td>Array, JSON, Text</td>
+                <td>✅ Yaxşı</td>
+                <td>⚠️ Məhdud</td>
+                <td>❌ Yox</td>
+                <td>Çox böyük</td>
+            </tr>
+            <tr>
+                <td><strong>BRIN</strong></td>
+                <td>Time-series, sorted</td>
+                <td>⚠️ Orta</td>
+                <td>✅ Yaxşı</td>
+                <td>⚠️ Orta</td>
+                <td>Çox kiçik</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Nə Vaxt İndeks Lazımdır?</h2>
+
+    <p>İndeks performance üçün çox vacibdir, amma həmişə lazım deyil. Düzgün qərar vermək üçün bir neçə faktor nəzərə almalıyıq.</p>
+
+    <h3>3.1. İndeks Yaratmaq Lazım Olan Hallar</h3>
+
+    <div class="success-box">
+        <strong>✅ İndeks Mütləq Lazımdır:</strong>
+        <ul>
+            <li><strong>WHERE clauselə tez-tez axtarılan sütunlar</strong></li>
+            <li><strong>JOIN əməliyyatlarında istifadə olunan sütunlar</strong></li>
+            <li><strong>Foreign key sütunları</strong></li>
+            <li><strong>ORDER BY və GROUP BY sütunları</strong></li>
+            <li><strong>Böyük cədvəllər (100K+ rows)</strong></li>
+            <li><strong>Yüksək read/write ratio (10:1 və daha çox)</strong></li>
+        </ul>
+    </div>
+
+    <div class="code-block"><code><span class="comment">-- ✅ YAXŞI: email ilə tez-tez axtarırıq</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email <span class="keyword">ON</span> users(email);
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'test@example.com'</span>;
+
+<span class="comment">-- ✅ YAXŞI: JOIN üçün lazım</span>
+<span class="keyword">CREATE INDEX</span> idx_orders_user_id <span class="keyword">ON</span> orders(user_id);
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> orders o 
+<span class="keyword">JOIN</span> users u <span class="keyword">ON</span> o.user_id = u.id;
+
+<span class="comment">-- ✅ YAXŞI: Sıralama üçün</span>
+<span class="keyword">CREATE INDEX</span> idx_posts_created <span class="keyword">ON</span> posts(created_at <span class="keyword">DESC</span>);
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> posts <span class="keyword">ORDER BY</span> created_at <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">10</span>;</code></div>
+
+    <h3>3.2. İndeks Lazım Olmayan Hallar</h3>
+
+    <div class="danger-box">
+        <strong>❌ İndeks Yaratmayın:</strong>
+        <ul>
+            <li><strong>Kiçik cədvəllər (&lt;1000 rows)</strong> - Full scan sürətlidir</li>
+            <li><strong>Yüksək write/read ratio</strong> - Hər insert/update indexi yeniləyir</li>
+            <li><strong>Low cardinality sütunlar</strong> - Az unique dəyər (gender, boolean)</li>
+            <li><strong>Nadir istifadə olunan sütunlar</strong> - Ayda 1 dəfə axtarış</li>
+            <li><strong>Çox kiçik string-lər</strong> - 2-3 simvol</li>
+        </ul>
+    </div>
+
+    <div class="code-block"><code><span class="comment">-- ❌ PISS: Boolean sütun, index faydasız</span>
+<span class="keyword">CREATE INDEX</span> idx_users_is_active <span class="keyword">ON</span> users(is_active);  <span class="comment">-- Lazım deyil!</span>
+
+<span class="comment">-- 50% true, 50% false olsa index istifadə edilməz</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> is_active = <span class="keyword">TRUE</span>;  <span class="comment">-- Full scan daha sürətli</span>
+
+<span class="comment">-- ❌ PISƏ: Kiçik cədvəl</span>
+<span class="keyword">CREATE TABLE</span> countries (id <span class="keyword">INT</span>, name <span class="keyword">VARCHAR</span>(<span class="number">100</span>));  <span class="comment">-- 195 rows</span>
+<span class="keyword">CREATE INDEX</span> idx_countries_name <span class="keyword">ON</span> countries(name);  <span class="comment">-- Lazım deyil!</span></code></div>
+
+    <h3>3.3. Cardinality və Selectivity</h3>
+
+    <p><strong>Cardinality</strong> - sütundakı unique dəyərlərin sayı.<br>
+    <strong>Selectivity</strong> - unique dəyərlərin ümumi sətirə nisbəti.</p>
+
+    <div class="code-block"><code><span class="comment">-- Cardinality yoxlama</span>
+<span class="keyword">SELECT</span> 
+    <span class="function">COUNT</span>(<span class="keyword">DISTINCT</span> email) <span class="keyword">as</span> unique_emails,
+    <span class="function">COUNT</span>(*) <span class="keyword">as</span> total_rows,
+    (<span class="function">COUNT</span>(<span class="keyword">DISTINCT</span> email)::float / <span class="function">COUNT</span>(*)::float) <span class="keyword">as</span> selectivity
+<span class="keyword">FROM</span> users;
+
+<span class="comment">-- Selectivity > 0.5 → Index effektivdir</span>
+<span class="comment">-- Selectivity < 0.1 → Index faydasız ola bilər</span></code></div>
+
+    <div class="example-box">
+        <h4>📊 Selectivity Nümunələri</h4>
+        <ul>
+            <li><strong>email (unique):</strong> Selectivity = 1.0 → ✅ Əla index candidate</li>
+            <li><strong>lastname:</strong> Selectivity = 0.6 → ✅ Yaxşı index</li>
+            <li><strong>country:</strong> Selectivity = 0.001 → ⚠️ Zəif index</li>
+            <li><strong>gender (M/F):</strong> Selectivity = 0.00002 → ❌ Index faydasız</li>
+        </ul>
+    </div>
+
+    <h3>3.4. Index Overhead (İndeksin Qiyməti)</h3>
+
+    <p>İndeks yaratmaq pulsuz deyil. Hər index bu xərcləri gətirir:</p>
+
+    <ul>
+        <li>💾 <strong>Disk space:</strong> İndeks ayrıca saxlanılır (5-20% əlavə)</li>
+        <li>⏱️ <strong>INSERT slow:</strong> Hər insert indexi yeniləyir</li>
+        <li>⏱️ <strong>UPDATE slow:</strong> İndekslənmiş sütun dəyişərsə, index update</li>
+        <li>⏱️ <strong>DELETE slow:</strong> İndeksdən də silinməli</li>
+        <li>🧠 <strong>Memory:</strong> Active indexes RAM-də cache olunur</li>
+    </ul>
+
+    <div class="code-block"><code><span class="comment">-- İndeks size yoxlama (PostgreSQL)</span>
+<span class="keyword">SELECT</span>
+    tablename,
+    indexname,
+    pg_size_pretty(pg_relation_size(indexrelid)) <span class="keyword">AS</span> index_size
+<span class="keyword">FROM</span> pg_indexes
+<span class="keyword">JOIN</span> pg_class <span class="keyword">ON</span> pg_indexes.indexname = pg_class.relname
+<span class="keyword">WHERE</span> schemaname = <span class="string">'public'</span>
+<span class="keyword">ORDER BY</span> pg_relation_size(indexrelid) <span class="keyword">DESC</span>;</code></div>
+
+    <h2>4. EXPLAIN və EXPLAIN ANALYZE - Query Plan Təhlili</h2>
+
+    <p><strong>EXPLAIN</strong> - SQL-in query plan göstərmə əmridir. Bu komanda sorğunun necə icra olunacağını göstərir.</p>
+
+    <h3>4.1. EXPLAIN Əsasları</h3>
+
+    <div class="info-box">
+        <strong>💡 EXPLAIN nə göstərir?</strong>
+        <ul>
+            <li>Hansı scan metodu istifadə olunur (Seq Scan, Index Scan)</li>
+            <li>Hansı indexlər istifadə olunur</li>
+            <li>JOIN strategiyası</li>
+            <li>Estimated cost və rows</li>
+            <li>Sort, Aggregate əməliyyatları</li>
+        </ul>
+    </div>
+
+    <div class="code-block"><code><span class="comment">-- Sadə EXPLAIN</span>
+<span class="keyword">EXPLAIN</span> 
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'ali@example.com'</span>;
+
+<span class="comment">-- Nəticə (index yoxdursa):</span>
+<span class="comment">-- Seq Scan on users  (cost=0.00..1234.56 rows=1 width=100)</span>
+<span class="comment">--   Filter: (email = 'ali@example.com')</span>
+
+<span class="comment">-- Nəticə (index varsa):</span>
+<span class="comment">-- Index Scan using idx_users_email on users  (cost=0.42..8.44 rows=1 width=100)</span>
+<span class="comment">--   Index Cond: (email = 'ali@example.com')</span></code></div>
+
+    <h3>4.2. Scan Metodları</h3>
+
+    <h4>4.2.1. Sequential Scan (Seq Scan)</h4>
+    <p>Cədvəlin hər sətrini oxuyur. Index yoxdursa və ya index istifadə etmək səmərəli deyilsə.</p>
+
+    <div class="code-block"><code><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> age > <span class="number">18</span>;
+
+<span class="comment">-- Seq Scan on users  (cost=0.00..1829.00 rows=48576 width=100)</span>
+<span class="comment">--   Filter: (age > 18)</span>
+<span class="comment">-- 48% sətir qaytarılır → Sequential scan daha yaxşı</span></code></div>
+
+    <h4>4.2.2. Index Scan</h4>
+    <p>İndeksdən istifadə edərək lazımi sətirlər tapılır və heap-dən oxunur.</p>
+
+    <div class="code-block"><code><span class="keyword">CREATE INDEX</span> idx_users_email <span class="keyword">ON</span> users(email);
+
+<span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'ali@example.com'</span>;
+
+<span class="comment">-- Index Scan using idx_users_email on users  (cost=0.42..8.44 rows=1)</span>
+<span class="comment">--   Index Cond: (email = 'ali@example.com')</span></code></div>
+
+    <h4>4.2.3. Index Only Scan</h4>
+    <p>Bütün məlumat indexdə olduqda heap-ə getmədən cavab verilir.</p>
+
+    <div class="code-block"><code><span class="keyword">CREATE INDEX</span> idx_users_email_name <span class="keyword">ON</span> users(email, name);
+
+<span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> email, name <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'ali@example.com'</span>;
+
+<span class="comment">-- Index Only Scan using idx_users_email_name on users  (cost=0.42..4.44 rows=1)</span>
+<span class="comment">--   Index Cond: (email = 'ali@example.com')</span>
+<span class="comment">-- ⚡ Ən sürətli - heap-ə getmir!</span></code></div>
+
+    <h4>4.2.4. Bitmap Index Scan</h4>
+    <p>Çoxlu sətirlər qaytarılarkən istifadə olunur. Əvvəlcə bitmap yaradır, sonra heap-i bir dəfə oxuyur.</p>
+
+    <div class="code-block"><code><span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> age <span class="keyword">BETWEEN</span> <span class="number">25</span> <span class="keyword">AND</span> <span class="number">30</span>;
+
+<span class="comment">-- Bitmap Heap Scan on users  (cost=100.42..1500.00 rows=5000)</span>
+<span class="comment">--   Recheck Cond: ((age >= 25) AND (age <= 30))</span>
+<span class="comment">--   ->  Bitmap Index Scan on idx_users_age  (cost=0.00..99.17 rows=5000)</span>
+<span class="comment">--         Index Cond: ((age >= 25) AND (age <= 30))</span></code></div>
+
+    <h3>4.3. EXPLAIN ANALYZE - Real Execution</h3>
+
+    <p><strong>EXPLAIN ANALYZE</strong> sorğunu həqiqətən icra edir və real statistika verir.</p>
+
+    <div class="warning-box">
+        <strong>⚠️ DİQQƏT:</strong>
+        EXPLAIN ANALYZE sorğunu icra edir! SELECT-də problem yoxdur, amma INSERT/UPDATE/DELETE ilə ehtiyatlı olun. Test əvvəl BEGIN, sonra ROLLBACK edin.
+    </div>
+
+    <div class="code-block"><code><span class="keyword">EXPLAIN ANALYZE</span> 
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'ali@example.com'</span>;
+
+<span class="comment">-- Index Scan using idx_users_email on users  </span>
+<span class="comment">--   (cost=0.42..8.44 rows=1 width=100) </span>
+<span class="comment">--   (actual time=0.025..0.027 rows=1 loops=1)</span>
+<span class="comment">--   Index Cond: (email = 'ali@example.com')</span>
+<span class="comment">-- Planning Time: 0.123 ms</span>
+<span class="comment">-- Execution Time: 0.052 ms</span></code></div>
+
+    <h4>EXPLAIN Parametrləri Oxuma:</h4>
+    <ul>
+        <li><strong>cost:</strong> Planlanan xərc (0.42..8.44 = başlanğıc..son)</li>
+        <li><strong>rows:</strong> Qaytarılacaq sətir sayı (estimated)</li>
+        <li><strong>width:</strong> Orta sətir size (byte)</li>
+        <li><strong>actual time:</strong> Real vaxt (ms)</li>
+        <li><strong>loops:</strong> Neçə dəfə icra olundu</li>
+    </ul>
+
+    <h3>4.4. EXPLAIN Formatları</h3>
+
+    <div class="code-block"><code><span class="comment">-- Text format (default)</span>
+<span class="keyword">EXPLAIN</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">1</span>;
+
+<span class="comment">-- JSON format</span>
+<span class="keyword">EXPLAIN</span> (<span class="keyword">FORMAT</span> JSON) <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">1</span>;
+
+<span class="comment">-- Detailed format</span>
+<span class="keyword">EXPLAIN</span> (<span class="keyword">ANALYZE</span>, <span class="keyword">BUFFERS</span>, <span class="keyword">VERBOSE</span>) 
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">1</span>;</code></div>
+
+    <h3>4.5. Praktiki Nümunələr</h3>
+
+    <div class="example-box">
+        <h4>📌 Case Study: Slow Query Optimization</h4>
+        <p><strong>Problem:</strong> 1M istifadəçidə email ilə axtarış 2.5 saniyə alır</p>
+    </div>
+
+    <div class="code-block"><code><span class="comment">-- 1. İlk vəziyyət (index yox)</span>
+<span class="keyword">EXPLAIN ANALYZE</span> 
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'test@example.com'</span>;
+
+<span class="comment">-- Seq Scan on users  (cost=0.00..21234.00 rows=1)</span>
+<span class="comment">--   (actual time=1.234..2478.123 rows=1 loops=1)</span>
+<span class="comment">-- Execution Time: 2478.523 ms  ❌ Çox yavaş!</span>
+
+<span class="comment">-- 2. Index yaradaq</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email <span class="keyword">ON</span> users(email);
+
+<span class="comment">-- 3. Yenidən yoxlayaq</span>
+<span class="keyword">EXPLAIN ANALYZE</span> 
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="string">'test@example.com'</span>;
+
+<span class="comment">-- Index Scan using idx_users_email on users  (cost=0.42..8.44 rows=1)</span>
+<span class="comment">--   (actual time=0.025..0.027 rows=1 loops=1)</span>
+<span class="comment">-- Execution Time: 0.052 ms  ✅ 47,000x sürətli!</span></code></div>
+
+    <h2>5. Query Optimization Strategiyaları</h2>
+
+    <h3>5.1. SELECT * Istifadə Etməyin</h3>
+
+    <div class="danger-box">
+        <strong>❌ Pis Praktika:</strong>
+        SELECT * lazım olmayan sütunları da oxuyur və network traffic artırır.
+    </div>
+
+    <div class="code-block"><code><span class="comment">-- ❌ PISƏ</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">1</span>;
+<span class="comment">-- 50 sütun oxuyur, 500KB data</span>
+
+<span class="comment">-- ✅ YAXŞI</span>
+<span class="keyword">SELECT</span> id, name, email <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id = <span class="number">1</span>;
+<span class="comment">-- 3 sütun oxuyur, 0.5KB data
+-- Index Only Scan istifadə edə bilər</span></code></div>
+
+    <h3>5.2. WHERE Clause Optimization</h3>
+
+    <div class="code-block"><code><span class="comment">-- ❌ PISƏ: Function sütunda</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="function">LOWER</span>(email) = <span class="string">'test@example.com'</span>;
+<span class="comment">-- İndeks istifadə edilə bilməz!</span>
+
+<span class="comment">-- ✅ YAXŞI: Function dəyərdə</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = <span class="function">LOWER</span>(<span class="string">'TEST@EXAMPLE.COM'</span>);
+<span class="comment">-- İndeks istifadə olunur</span>
+
+<span class="comment">-- ✅ Və ya functional index</span>
+<span class="keyword">CREATE INDEX</span> idx_users_email_lower <span class="keyword">ON</span> users(<span class="function">LOWER</span>(email));
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="function">LOWER</span>(email) = <span class="string">'test@example.com'</span>;</code></div>
+
+    <h3>5.3. LIKE Optimization</h3>
+
+    <div class="code-block"><code><span class="comment">-- ✅ İndeks istifadə edir (prefix search)</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> lastname <span class="keyword">LIKE</span> <span class="string">'Mam%'</span>;
+
+<span class="comment">-- ❌ İndeks istifadə edilə bilməz (suffix search)</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> lastname <span class="keyword">LIKE</span> <span class="string">'%dov'</span>;
+
+<span class="comment">-- ❌ İndeks istifadə edilə bilməz (middle search)</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> lastname <span class="keyword">LIKE</span> <span class="string">'%mma%'</span>;
+
+<span class="comment">-- ✅ Full-text search üçün GIN index</span>
+<span class="keyword">CREATE INDEX</span> idx_users_lastname_trgm 
+<span class="keyword">ON</span> users <span class="keyword">USING</span> gin(lastname gin_trgm_ops);
+
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> lastname <span class="keyword">LIKE</span> <span class="string">'%mma%'</span>;  <span class="comment">-- İndi sürətli!</span></code></div>
+
+    <h3>5.4. JOIN Optimization</h3>
+
+    <div class="code-block"><code><span class="comment">-- ✅ İndeks olmalıdır</span>
+<span class="keyword">CREATE INDEX</span> idx_orders_user_id <span class="keyword">ON</span> orders(user_id);
+<span class="keyword">CREATE INDEX</span> idx_users_id <span class="keyword">ON</span> users(id);  <span class="comment">-- PK auto index</span>
+
+<span class="keyword">EXPLAIN ANALYZE</span>
+<span class="keyword">SELECT</span> u.name, o.product_name
+<span class="keyword">FROM</span> users u
+<span class="keyword">JOIN</span> orders o <span class="keyword">ON</span> u.id = o.user_id
+<span class="keyword">WHERE</span> u.id = <span class="number">100</span>;
+
+<span class="comment">-- Nested Loop join istifadə edəcək</span>
+<span class="comment">-- 1. users-də id=100 tap (Index Scan)</span>
+<span class="comment">-- 2. orders-də user_id=100 tap (Index Scan)</span></code></div>
+
+    <h3>5.5. Subquery vs JOIN</h3>
+
+    <div class="code-block"><code><span class="comment">-- ❌ PISƏ: Correlated subquery (hər sətir üçün icra olunur)</span>
+<span class="keyword">SELECT</span> u.name,
+    (<span class="keyword">SELECT</span> <span class="function">COUNT</span>(*) <span class="keyword">FROM</span> orders o <span class="keyword">WHERE</span> o.user_id = u.id) <span class="keyword">as</span> order_count
+<span class="keyword">FROM</span> users u;
+
+<span class="comment">-- ✅ YAXŞI: JOIN və GROUP BY</span>
+<span class="keyword">SELECT</span> u.name, <span class="function">COUNT</span>(o.id) <span class="keyword">as</span> order_count
+<span class="keyword">FROM</span> users u
+<span class="keyword">LEFT JOIN</span> orders o <span class="keyword">ON</span> u.id = o.user_id
+<span class="keyword">GROUP BY</span> u.id, u.name;</code></div>
+
+    <h3>5.6. EXISTS vs IN vs JOIN</h3>
+
+    <div class="code-block"><code><span class="comment">-- Sifariş edən istifadəçiləri tap</span>
+
+<span class="comment">-- ✅ EXISTS (ən effektiv çox hallarda)</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users u
+<span class="keyword">WHERE EXISTS</span> (<span class="keyword">SELECT</span> <span class="number">1</span> <span class="keyword">FROM</span> orders o <span class="keyword">WHERE</span> o.user_id = u.id);
+
+<span class="comment">-- ⚠️ IN (kiçik list üçün yaxşı)</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users 
+<span class="keyword">WHERE</span> id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> user_id <span class="keyword">FROM</span> orders);
+
+<span class="comment">-- ✅ JOIN (data lazımdırsa)</span>
+<span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> u.* 
+<span class="keyword">FROM</span> users u
+<span class="keyword">JOIN</span> orders o <span class="keyword">ON</span> u.id = o.user_id;</code></div>
+
+    <h3>5.7. LIMIT və Pagination</h3>
+
+    <div class="code-block"><code><span class="comment">-- ❌ PISƏ: OFFSET böyük

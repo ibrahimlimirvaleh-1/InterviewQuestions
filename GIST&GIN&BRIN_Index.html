@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiST, GIN və BRIN İndekslər - Tam Bələdçi</title>
+    <style>
+        @page { size: A4; margin: 1.5cm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: white;
+            padding: 30px;
+            max-width: 210mm;
+            margin: 0 auto;
+            font-size: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header .subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+        h2 {
+            color: #667eea;
+            font-size: 32px;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #667eea;
+        }
+        h3 {
+            color: #764ba2;
+            font-size: 24px;
+            margin-top: 35px;
+            margin-bottom: 18px;
+        }
+        h4 {
+            color: #555;
+            font-size: 19px;
+            margin-top: 25px;
+            margin-bottom: 14px;
+        }
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .code-block code { display: block; white-space: pre; line-height: 1.6; }
+        .keyword { color: #569cd6; font-weight: bold; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 6px solid #2196f3;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        .info-box strong {
+            color: #1976d2;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 6px solid #ff9800;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        .warning-box strong {
+            color: #f57c00;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 6px solid #4caf50;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        .success-box strong {
+            color: #2e7d32;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .danger-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 6px solid #f44336;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        .danger-box strong {
+            color: #c62828;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .comparison-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .comparison-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .comparison-table tr:hover {
+            background: #e3f2fd;
+        }
+        ul, ol {
+            margin-left: 35px;
+            margin-bottom: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        .visual-diagram {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: 3px solid #667eea;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 12px;
+        }
+        .visual-diagram h4 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+        .visual-diagram pre {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        .example-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
+            border: 3px dashed #ffc107;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        .example-box h4 {
+            color: #f57f17;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .index-card {
+            background: white;
+            border: 3px solid #667eea;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .index-card h3 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 26px;
+        }
+        .download-btn {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 700;
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .download-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 35px rgba(102, 126, 234, 0.6);
+        }
+        @media print {
+            body { padding: 0; }
+            .download-btn { display: none; }
+            h2 { page-break-after: avoid; }
+            .visual-diagram, .code-block { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="window.print()">📄 PDF Yüklə</button>
+    
+    <div class="header">
+        <h1>GiST, GIN və BRIN</h1>
+        <div class="subtitle">Xüsusi İndeks Növləri - Tam və Ətraflı Bələdçi</div>
+        <p style="margin-top: 15px; font-size: 16px;">Sıfırdan Professional Səviyyəyə - 150+ Səhifə</p>
+    </div>
+
+    <div class="info-box">
+        <strong>📌 Bu 3 İndeks Növü Niyə Fərqlidir?</strong>
+        <p><strong>B-Tree</strong> və <strong>Hash</strong> standart məlumat tipləri üçün işləyir: numbers, strings, dates.</p>
+        
+        <p><strong>Amma bəzi hallarda onlar kifayət etmir:</strong></p>
+        <ul style="margin-top: 10px;">
+            <li>🗺️ Coğrafi məlumatlar: "40.4093°N, 49.8671°E yaxınlığında nə var?"</li>
+            <li>🏷️ Array/JSON: "Bu array-da 'sql' elementi var?"</li>
+            <li>📊 Çox böyük cədvəllər: "1 milyard sətirdə index space problemi"</li>
+        </ul>
+        
+        <p style="margin-top: 15px;"><strong>Bu xüsusi hallarda GiST, GIN və BRIN lazımdır!</strong></p>
+    </div>
+
+    <h2>1. GiST İndeks - Generalized Search Tree</h2>
+
+    <div class="index-card">
+        <h3>🗺️ GiST (Generalized Search Tree)</h3>
+        <p><strong>Tam Adı:</strong> Generalized Search Tree (Ümumi Axtarış Ağacı)</p>
+        <p><strong>Yaranma İli:</strong> 1995 (University of California, Berkeley)</p>
+        <p><strong>Əsas Məqsəd:</strong> Geometric və mürəkkəb data tipləri üçün axtarış</p>
+        <p><strong>Strukturu:</strong> Balanced tree (B-Tree kimi) amma daha flexible</p>
+        <p><strong>Əsas Fərq:</strong> "Overlapping regions" (üst-üstə düşən bölgələr) konsepti</p>
+    </div>
+
+    <h3>1.1. GiST Nədir - Fundamental Konsept</h3>
+
+    <p>GiST <strong>framework</strong>dir - yəni universal template. Müxtəlif data tipləri üçün öz axtarış məntiqini qura bilərsən.</p>
+
+    <p><strong>Sadə izah:</strong> B-Tree yalnız "böyükdür/kiçikdir" bilir. GiST isə "içindədir", "üst-üstə düşür", "kəsişir", "yaxındır" kimi mürəkkəb əlaqələri anlayır.</p>
+
+    <div class="info-box">
+        <strong>💡 Real Həyat Metaforası - Şəhər Xəritəsi:</strong>
+        
+        <p><strong>Klassik B-Tree:</strong> Küçə adları əlifba sırasında</p>
+        <pre style="background: white; padding: 15px; margin: 10px 0; border-radius: 5px;">
+A küçəsi
+B küçəsi
+C küçəsi
+...
+Z küçəsi</pre>
+        
+        <p><strong>GiST İndeks:</strong> Rayonlara və koordinatlara görə</p>
+        <pre style="background: white; padding: 15px; margin: 10px 0; border-radius: 5px;">
+Bakı şəhəri
+├─ Nəsimi rayonu (lat: 40.40, lon: 49.87, radius: 3km)
+│  ├─ 28 May metro (40.3808, 49.8392)
+│  └─ Koroğlu metro (40.3856, 49.8289)
+├─ Nərimanov rayonu (lat: 40.40, lon: 49.87, radius: 2km)
+│  ├─ Nərimanov metro (40.4034, 49.8722)
+│  └─ Qara Qarayev metro (40.4056, 49.8917)
+└─ Səbail rayonu (lat: 40.37, lon: 49.84, radius: 2km)
+   └─ Sahil metro (40.3650, 49.8356)</pre>
+
+        <p><strong>Axtarış:</strong> "40.40°N, 49.87°E koordinatından 2km daxilində hansı metrolar var?"</p>
+        <p>GiST cavab verir: Nərimanov metro, Nəsimi metro (geometric calculation ilə)</p>
+    </div>
+
+    <h3>1.2. GiST İş Prinsipi - Dərin Nəzər</h3>
+
+    <p>GiST-in əsas ideyası <strong>Bounding Box (Hədd Qutusu)</strong>dur. Hər node bir bölgəni təmsil edir.</p>
+
+    <div class="visual-diagram">
+        <h4>📐 GiST Bounding Box Konsepti</h4>
+        <pre>
+Təsəvvür edin: 100x100 koordinat sistemi
+
+ROOT NODE (Bütün məkan):
+┌─────────────────────────────────────────────────────┐
+│                                                       │
+│  Bounding Box: (0,0) to (100,100)                   │
+│  "Bütün Azərbaycan"                                 │
+│                                                       │
+└─────────────────────────────────────────────────────┘
+                    /              \
+    ┌──────────────────┐    ┌──────────────────┐
+    │ Box 1 (Sol-Aşağı)│    │ Box 2 (Sağ-Yuxarı)│
+    │ (0,0)-(50,50)    │    │ (50,50)-(100,100) │
+    │ "Bakı və ətraf"  │    │ "Quba-Şəki ətraf" │
+    └──────────────────┘    └──────────────────┘
+         /        \              /          \
+    [Point]   [Point]      [Point]      [Point]
+   (25,25)   (30,30)      (75,75)      (80,80)
+   "Nizami"  "28May"     "Şəki"       "Quba"
+
+AXTARIŞ PROSESI:
+Axtarırıq: (25, 25) koordinatı
+
+Addım 1: ROOT-da yoxla
+  - (25,25) Box 1-ə daxildir? ✓ BƏLİ
+  - (25,25) Box 2-yə daxildir? ✗ XEYR
+  
+Addım 2: Box 1-ə get (Box 2-ni ignore et)
+
+Addım 3: Box 1 içindəki point-lara bax
+  - (25,25) === (25,25) ✓ TAPILDI!
+
+Nəticə: "Nizami" stansiyası
+Disk I/O: 3 əməliyyat (root + box1 + point)
+        </pre>
+    </div>
+
+    <h3>1.3. GiST Daxili Struktur</h3>
+
+    <p>GiST node-larında saxlanılan məlumat:</p>
+
+    <div class="code-block"><code><span class="comment">-- GiST Node Strukturu (Simplified)</span>
+<span class="keyword">struct</span> GiSTNode {
+    <span class="comment">// Metadata</span>
+    <span class="keyword">bool</span> is_leaf;              <span class="comment">// Leaf node yoxsa internal?</span>
+    <span class="keyword">int</span> num_entries;           <span class="comment">// Bu node-da neçə entry var</span>
+    
+    <span class="comment">// Hər entry üçün</span>
+    <span class="keyword">struct</span> Entry {
+        BoundingBox bbox;       <span class="comment">// Hədd qutusu: (min_x, min_y, max_x, max_y)</span>
+        Pointer child;          <span class="comment">// Child node və ya actual data</span>
+        Predicate pred;         <span class="comment">// Axtarış predicate (contains, overlaps və s.)</span>
+    }[] entries;
+}
+
+<span class="comment">-- Məsələn, geometric point üçün:</span>
+Entry {
+    bbox: (40.40, 49.86, 40.41, 49.88),  <span class="comment">// Bölgə</span>
+    child: pointer_to_child_node,
+    pred: ST_Contains                     <span class="comment">// "İçindədir" funksiyası</span>
+}</code></div>
+
+    <h3>1.4. GiST Praktiki Nümunələr</h3>
+
+    <h4>Nümunə 1: Coğrafi Koordinatlar - Metro Stansiyaları</h4>
+
+    <div class="code-block"><code><span class="comment">-- PostgreSQL-də PostGIS extension lazımdır</span>
+<span class="keyword">CREATE EXTENSION</span> postgis;
+
+<span class="comment">-- Cədvəl yaratmaq</span>
+<span class="keyword">CREATE TABLE</span> metro_stations (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,
+    name <span class="keyword">VARCHAR</span>(<span class="number">100</span>),
+    line <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    location <span class="keyword">GEOMETRY</span>(Point, <span class="number">4326</span>)  <span class="comment">-- WGS84 koordinat sistemi</span>
+);
+
+<span class="comment">-- GiST index yaratmaq</span>
+<span class="keyword">CREATE INDEX</span> idx_metro_location 
+<span class="keyword">ON</span> metro_stations <span class="keyword">USING</span> gist(location);
+
+<span class="comment">-- Məlumat daxil etmək (real Bakı metro koordinatları)</span>
+<span class="keyword">INSERT INTO</span> metro_stations (name, line, location) <span class="keyword">VALUES</span>
+(<span class="string">'İçərişəhər'</span>, <span class="string">'Qırmızı'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8356</span>, <span class="number">40.3650</span>), <span class="number">4326</span>)),
+(<span class="string">'Sahil'</span>, <span class="string">'Qırmızı'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8392</span>, <span class="number">40.3683</span>), <span class="number">4326</span>)),
+(<span class="string">'28 May'</span>, <span class="string">'Qırmızı'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8392</span>, <span class="number">40.3808</span>), <span class="number">4326</span>)),
+(<span class="string">'Gənclik'</span>, <span class="string">'Qırmızı'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8467</span>, <span class="number">40.3783</span>), <span class="number">4326</span>)),
+(<span class="string">'Nəriman Nərimanov'</span>, <span class="string">'Qırmızı'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8722</span>, <span class="number">40.4034</span>), <span class="number">4326</span>)),
+(<span class="string">'Bakmil'</span>, <span class="string">'Yaşıl'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8264</span>, <span class="number">40.4147</span>), <span class="number">4326</span>)),
+(<span class="string">'Nəsimi'</span>, <span class="string">'Yaşıl'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8456</span>, <span class="number">40.4090</span>), <span class="number">4326</span>)),
+(<span class="string">'Azadlıq prospekti'</span>, <span class="string">'Yaşıl'</span>, ST_SetSRID(ST_MakePoint(<span class="number">49.8554</span>, <span class="number">40.4028</span>), <span class="number">4326</span>));
+
+<span class="comment">-- SORĞU 1: Konkret nöqtəyə ən yaxın 3 metro stansiyası</span>
+<span class="keyword">SELECT</span> 
+    name,
+    line,
+    ST_Distance(
+        location,
+        ST_SetSRID(ST_MakePoint(<span class="number">49.8500</span>, <span class="number">40.3900</span>), <span class="number">4326</span>)  <span class="comment">-- Fountains Square</span>
+    ) * <span class="number">111</span> <span class="keyword">AS</span> distance_km  <span class="comment">-- Dərəcədən km-ə çevirmə</span>
+<span class="keyword">FROM</span> metro_stations
+<span class="keyword">ORDER BY</span> location <-> ST_SetSRID(ST_MakePoint(<span class="number">49.8500</span>, <span class="number">40.3900</span>), <span class="number">4326</span>)
+<span class="keyword">LIMIT</span> <span class="number">3</span>;
+
+<span class="comment">-- EXPLAIN ilə yoxlayaq</span>
+<span class="keyword">EXPLAIN ANALYZE</span>
+<span class="keyword">SELECT</span> name <span class="keyword">FROM</span> metro_stations
+<span class="keyword">WHERE</span> ST_DWithin(
+    location,
+    ST_SetSRID(ST_MakePoint(<span class="number">49.8500</span>, <span class="number">40.3900</span>), <span class="number">4326</span>),
+    <span class="number">0.01</span>  <span class="comment">-- ~1km radius</span>
+);
+
+<span class="comment">-- Nəticə:
+-- Index Scan using idx_metro_location on metro_stations
+--   (cost=0.14..8.16 rows=1 width=32) (actual time=0.045..0.047 rows=2)
+-- Planning Time: 0.112 ms
+-- Execution Time: 0.068 ms
+
+-- GiST index istifadə olunur! ✓</span>
+
+<span class="comment">-- SORĞU 2: Müəyyən radiusda olan stansiyalar</span>
+<span class="keyword">SELECT</span> 
+    name,
+    line,
+    ST_AsText(location) <span class="keyword">AS</span> coordinates
+<span class="keyword">FROM</span> metro_stations
+<span class="keyword">WHERE</span> ST_DWithin(
+    location,
+    ST_SetSRID(ST_MakePoint(<span class="number">49.8500</span>, <span class="number">40.3900</span>), <span class="number">4326</span>),
+    <span class="number">0.015</span>  <span class="comment">-- ~1.5km</span>
+);
+
+<span class="comment">-- SORĞU 3: Polygon daxilində olan stansiyalar</span>
+<span class="keyword">WITH</span> search_area <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> ST_MakePolygon(ST_GeomFromText(
+        <span class="string">'LINESTRING(49.83 40.36, 49.86 40.36, 49.86 40.39, 49.83 40.39, 49.83 40.36)'</span>,
+        <span class="number">4326</span>
+    )) <span class="keyword">AS</span> polygon
+)
+<span class="keyword">SELECT</span> 
+    m.name,
+    m.line
+<span class="keyword">FROM</span> metro_stations m, search_area sa
+<span class="keyword">WHERE</span> ST_Contains(sa.polygon, m.location);
+
+<span class="comment">-- Nəticə: İçərişəhər, Sahil, 28 May stansiyaları</span></code></div>
+
+    <h4>Nümunə 2: IP Address Ranges</h4>
+
+    <div class="code-block"><code><span class="comment">-- IP aralıqları üçün GiST</span>
+<span class="keyword">CREATE TABLE</span> ip_blocks (
+    id <span class="keyword">SERIAL PRIMARY KEY</span>,
+    country <span class="keyword">VARCHAR</span>(<span class="number">2</span>),
+    ip_range <span class="keyword">inet</span>,
+    description <span class="keyword">TEXT</span>
+);
+
+<span class="comment">-- GiST index (inet_ops operator class)</span>
+<span class="keyword">CREATE INDEX</span> idx_ip_blocks 
+<span class="keyword">ON</span> ip_blocks <span class="keyword">USING</span> gist(ip_range inet_ops);
+
+<span class="comment">-- Azərbaycan IP aralıqları (real data)</span>
+<span class="keyword">INSERT INTO</span> ip_blocks (country, ip_range, description) <span class="keyword">VALUES</span>
+(<span class="string">'AZ'</span>, <span class="string">'5.197.0.0/16'</span>, <span class="string">'Delta Telecom'</span>),
+(<span class="string">'AZ'</span>, <span class="string">'31.170.0.0/15'</span>, <span class="string">'AzEuroTel'</span>),
+(<span class="string">'AZ'</span>, <span class="string">'37.252.0.0/14'</span>, <span class="string">'Bakcell'</span>),
+(<span class="string">'AZ'</span>, <span class="string">'46.227.192.0/18'</span>, <span class="string">'AzTelecom'</span>),
+(<span class="string">'AZ'</span>, <span class="string">'79.141.160.0/19'</span>, <span class="string">'Azercell'</span>),
+(<span class="string">'AZ'</span>, <span class="string">'81.17.32.0/20'</span>, <span class="string">'Azeronline'</span>),
+(<span class="string">'TR'</span>, <span class="string">'31.145.0.0/16'</span>, <span class="string">'Turkcell'</span>),
+(<span class="string">'RU'</span>, <span class="string">'5.3.0.0/16'</span>, <span class="string">'Rostelecom'</span>);
+
+<span class="comment">-- Konkret IP hansı ölkəyə məxsusdur?</span>
+<span class="keyword">SELECT</span> 
+    country,
+    description,
+    ip_range
+<span class="keyword">FROM</span> ip_blocks
+<span class="keyword">WHERE</span> ip_range >> inet <span class="string">'5.197.100.50'</span>;
+
+<span class="comment">-- Nəticə: AZ | Delta Telecom | 5.197.0.0/16</span>
+
+<span class="comment">-- Subnet-də neçə IP var?</span>
+<span class="keyword">SELECT</span> 
+    country,
+    ip_range,
+    masklen(ip_range) <span class="keyword">AS</span> subnet_mask,
+    <span class="function">power</span>(<span class="number">2</span>, <span class="number">32</span> - masklen(ip_range))::bigint <span class="keyword">AS</span> total_ips
+<span class="keyword">FROM</span> ip_blocks
+<span class="keyword">WHERE</span> country = <span class="string">'AZ'</span>;
+
+<span class="comment">-- EXPLAIN ilə performans</span>
+<span class="keyword">EXPLAIN ANALYZE</span>
+<span class="keywor

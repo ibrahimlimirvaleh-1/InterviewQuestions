@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL JOIN Növləri: CROSS JOIN və SELF JOIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .slides-container {
+            position: relative;
+            min-height: 600px;
+            padding: 20px;
+        }
+        
+        .slide {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-title {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+        }
+        
+        .slide-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .content-box {
+            background-color: #f8f9fa;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .comparison-table th:nth-child(1) {
+            background-color: #e74c3c;
+        }
+        
+        .comparison-table th:nth-child(2) {
+            background-color: #2ecc71;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background-color: #f1f8ff;
+            border-top: 1px solid #ddd;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+        
+        .nav-btn:disabled {
+            background: linear-gradient(to right, #95a5a6, #7f8c8d);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .slide-counter {
+            align-self: center;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        
+        .tip-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .warning-box {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .success-box {
+            background-color: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .slide {
+                padding: 20px 15px;
+            }
+            
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="header">
+            <h1>SQL JOIN Növləri: CROSS JOIN və SELF JOIN</h1>
+            <p>İlişkili verilənlər bazası sorğuları üçün dərin baxış</p>
+        </div>
+        
+        <div class="slides-container">
+            <!-- Slide 1 -->
+            <div class="slide active" id="slide1">
+                <h2 class="slide-title">Giriş: SQL JOIN Növləri</h2>
+                <div class="slide-content">
+                    <div class="content-box">
+                        <p>SQL-də JOIN əməliyyatları müxtəlif cədvəllərdən məlumatları birləşdirmək üçün istifadə olunur. Bu təqdimatda iki xüsusi JOIN növünü - <span class="highlight">CROSS JOIN</span> və <span class="highlight">SELF JOIN</span>-i ətraflı şəkildə araşdıracağıq.</p>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>📌 Əhəmiyyətli:</strong> JOIN əməliyyatları verilənlər bazasında ən çox istifadə olunan əməliyyatlardandır və onları düzgün başa düşmək performanslı sorğular yazmaq üçün çox vacibdir.
+                    </div>
+                    
+                    <h3>Təqdimat Məzmunu:</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>CROSS JOIN nədir və necə işləyir?</li>
+                        <li>SELF JOIN nədir və hansı hallarda istifadə olunur?</li>
+                        <li>Hər iki JOIN növünün sintaksisləri</li>
+                        <li>Praktik nümunələr və kod parçaları</li>
+                        <li>İki JOIN növü arasındakı fərqlər</li>
+                        <li>Praktik tətbiqlər və məsləhətlər</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="slide" id="slide2">
+                <h2 class="slide-title">1. CROSS JOIN Nədir?</h2>
+                <div class="slide-content">
+                    <p><span class="highlight">CROSS JOIN</span> iki cədvəlin <strong>bütün mümkün kombinasiyalarını</strong> yaradan JOIN növüdür.</p>
+                    
+                    <div class="content-box">
+                        <h3>Xüsusiyyətləri:</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Dekart hasilini</strong> yaradır</li>
+                            <li>Ümumiyyətlə şərt tələb etmir (WHERE olmadan)</li>
+                            <li>Nəticədə <strong>M×N</strong> sayda sətir əldə edilir:
+                                <ul>
+                                    <li><strong>M</strong>: birinci cədvəlin sətirlərinin sayı</li>
+                                    <li><strong>N</strong>: ikinci cədvəlin sətirlərinin sayı</li>
+                                </ul>
+                            </li>
+                            <li>Böyük cədvəllər üzərində performansa ciddi təsir göstərə bilər</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Diqqət:</strong> CROSS JOIN böyük cədvəllər üzərində istifadə edilərsə, nəticə çox böyük ola bilər. Məsələn, 1000 sətirli bir cədvəli 1000 sətirli başqa bir cədvəllə CROSS JOIN etsək, 1.000.000 sətir nəticə alarıq!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="slide" id="slide3">
+                <h2 class="slide-title">2. CROSS JOIN Sintaksisi</h2>
+                <div class="slide-content">
+                    <p>CROSS JOIN-in iki əsas sintaksis forması var:</p>
+                    
+                    <h3>Açıq sintaksis (explicit):</h3>
+                    <div class="code-block">
+                        SELECT sütun_adları<br>
+                        FROM cədvəl1<br>
+                        CROSS JOIN cədvəl2;
+                    </div>
+                    
+                    <h3>Qapalı sintaksis (implicit):</h3>
+                    <div class="code-block">
+                        SELECT sütun_adları<br>
+                        FROM cədvəl1, cədvəl2;
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Professional məsləhət:</strong> Açıq sintaksisdən (CROSS JOIN açar sözləri ilə) istifadə etmək daha yaxşıdır, çünki kodun oxunaqlılığını artırır və başqa developerlər üçün aydın olur ki, burada nə edilir.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 4 -->
+            <div class="slide" id="slide4">
+                <h2 class="slide-title">3. CROSS JOIN Nümunəsi</h2>
+                <div class="slide-content">
+                    <p>Aşağıdakı iki kiçik cədvəli nəzərdən keçirək:</p>
+                    
+                    <div class="table-container">
+                        <h4>Rənglər cədvəli:</h4>
+                        <table>
+                            <tr>
+                                <th>id</th>
+                                <th>rəng</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Qırmızı</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Mavi</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Yaşıl</td>
+                            </tr>
+                        </table>
+                        
+                        <h4>Ölçülər cədvəli:</h4>
+                        <table>
+                            <tr>
+                                <th>id</th>
+                                <th>ölçü</th>
+                            </tr>
+                            <tr>
+                                <td>S</td>
+                                <td>Kiçik</td>
+                            </tr>
+                            <tr>
+                                <td>M</td>
+                                <td>Orta</td>
+                            </tr>
+                            <tr>
+                                <td>L</td>
+                                <td>Böyük</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <h3>CROSS JOIN sorğusu:</h3>
+                    <div class="code-block">
+                        SELECT r.rəng, o.ölçü<br>
+                        FROM Rənglər r<br>
+                        CROSS JOIN Ölçülər o;
+                    </div>
+                    
+                    <h3>Nəticə (9 sətir):</h3>
+                    <div class="table-container">
+                        <table>
+                            <tr>
+                                <th>rəng</th>
+                                <th>ölçü</th>
+                            </tr>
+                            <tr><td>Qırmızı</td><td>Kiçik</td></tr>
+                            <tr><td>Qırmızı</td><td>Orta</td></tr>
+                            <tr><td>Qırmızı</td><td>Böyük</td></tr>
+                            <tr><td>Mavi</td><td>Kiçik</td></tr>
+                            <tr><td>Mavi</td><td>Orta</td></tr>
+                            <tr><td>Mavi</td><td>Böyük</td></tr>
+                            <tr><td>Yaşıl</td><td>Kiçik</td></tr>
+                            <tr><td>Yaşıl</td><td>Orta</td></tr>
+                            <tr><td>Yaşıl</td><td>Böyük</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 5 -->
+            <div class="slide" id="slide5">
+                <h2 class="slide-title">4. SELF JOIN Nədir?</h2>
+                <div class="slide-content">
+                    <p><span class="highlight">SELF JOIN</span> bir cədvəlin <strong>özü ilə JOIN</strong> edilməsidir. Bu, eyni cədvəli iki fərqli aliases (ləqəb) adı ilə istifadə edərək həyata keçirilir.</p>
+                    
+                    <div class="content-box">
+                        <h3>Əsas tətbiq halları:</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>İyerarxik məlumat strukturları</strong> (menecer-işçi münasibətləri)</li>
+                            <li>Tərkibində <strong>özünə istinad</strong> olan məlumatlar</li>
+                            <li>Ardıcıl qeydlərin müqayisəsi (məsələn, tarixlər üzrə)</li>
+                            <li>Qraf traversalları (dost şəbəkələri, təşkilat quruluşları)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>📌 Qeyd:</strong> SELF JOIN texniki olaraq ayrı bir JOIN növü deyil, daha çox bir cədvəlin özü ilə INNER JOIN, LEFT JOIN və ya digər JOIN növlərinin istifadə olunmasıdır.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 6 -->
+            <div class="slide" id="slide6">
+                <h2 class="slide-title">5. SELF JOIN Sintaksisi</h2>
+                <div class="slide-content">
+                    <p>SELF JOIN üçün cədvəli iki fərqli alias (ləqəb) ilə istifadə etmək lazımdır:</p>
+                    
+                    <div class="code-block">
+                        SELECT A.sütun_adları, B.sütun_adları<br>
+                        FROM cədvəl_adı AS A<br>
+                        INNER JOIN cədvəl_adı AS B<br>
+                        ON A.açar_sütun = B.açar_sütun<br>
+                        WHERE [əlavə şərtlər];
+                    </div>
+                    
+                    <h3>Digər JOIN növləri ilə SELF JOIN:</h3>
+                    
+                    <div class="code-block">
+                        -- LEFT JOIN ilə SELF JOIN<br>
+                        SELECT A.ad, B.ad<br>
+                        FROM İşçilər A<br>
+                        LEFT JOIN İşçilər B<br>
+                        ON A.menecer_id = B.id;
+                    </div>
+                    
+                    <div class="code-block">
+                        -- INNER JOIN ilə SELF JOIN<br>
+                        SELECT A.ad, B.ad<br>
+                        FROM İşçilər A<br>
+                        INNER JOIN İşçilər B<br>
+                        ON A.departament_id = B.departament_id<br>
+                        WHERE A.id != B.id;
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Diqqət:</strong> SELF JOIN-də alias istifadə etmək məcburidir, əks halda SQL server sütunların hansı cədvələ aid olduğunu anlaya bilməz.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 7 -->
+            <div class="slide" id="slide7">
+                <h2 class="slide-title">6. SELF JOIN Nümunəsi</h2>
+                <div class="slide-content">
+                    <p>İşçilər cədvəlini nəzərdən keçirək (hər işçinin meneceri göstərilir):</p>
+                    
+                    <div class="table-container">
+                        <h4>İşçilər cədvəli:</h4>
+                        <table>
+                            <tr>
+                                <th>emp_id</th>
+                                <th>ad</th>
+                                <th>menecer_id</th>
+                            </tr>
+                            <tr><td>1</td><td>Əli</td><td>NULL</td></tr>
+                            <tr><td>2</td><td>Vəli</td><td>1</td></tr>
+                            <tr><td>3</td><td>Nəsim</td><td>1</td></tr>
+                            <tr><td>4</td><td>Ləman</td><td>2</td></tr>
+                        </table>
+                    </div>
+                    
+                    <h3>SELF JOIN sorğusu (işçi və menecer cütləri):</h3>
+                    <div class="code-block">
+                        SELECT <br>
+                            e1.ad AS İşçi,<br>
+                            e2.ad AS Menecer<br>
+                        FROM İşçilər e1<br>
+                        LEFT JOIN İşçilər e2<br>
+                        ON e1.menecer_id = e2.emp_id;
+                    </div>
+                    
+                    <h3>Nəticə:</h3>
+                    <div class="table-container">
+                        <table>
+                            <tr>
+                                <th>İşçi</th>
+                                <th>Menecer</th>
+                            </tr>
+                            <tr><td>Əli</td><td>NULL</td></tr>
+                            <tr><td>Vəli</td><td>Əli</td></tr>
+                            <tr><td>Nəsim</td><td>Əli</td></tr>
+                            <tr><td>Ləman</td><td>Vəli</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Əlavə nümunə:</strong> Eyni departamentdə işləyən işçiləri tapmaq üçün də SELF JOIN istifadə edə bilərik: <code>SELECT A.ad, B.ad FROM İşçilər A INNER JOIN İşçilər B ON A.departament_id = B.departament_id WHERE A.id != B.id;</code>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 8 -->
+            <div class="slide" id="slide8">
+                <h2 class="slide-title">7. CROSS JOIN vs SELF JOIN</h2>
+                <div class="slide-content">
+                    <p>İki JOIN növü arasındakı əsas fərqlər:</p>
+                    
+                    <div class="table-container">
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Xüsusiyyət</th>
+                                <th>CROSS JOIN</th>
+                                <th>SELF JOIN</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Cədvəl sayı</strong></td>
+                                <td>2 fərqli cədvəl</td>
+                                <td>1 cədvəl (özü ilə)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Nəticə sayı</strong></td>
+                                <td>M×N</td>
+                                <td>M×M (potensial olaraq)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Şərt</strong></td>
+                                <td>Adətən şərtsiz</td>
+                                <td>Həmişə şərtlə (ON)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Əsas tətbiq</strong></td>
+                                <td>Kombinasiya yaratmaq</td>
+                                <td>İçəri münasibətlər</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Performans təsiri</strong></td>
+                                <td>Yüksək (böyük cədvəllərdə)</td>
+                                <td>Orta</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alias (ləqəb) zəruriliyi</strong></td>
+                                <td>Tələb deyil</td>
+                                <td>Məcburidir</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="content-box">
+                        <h3>Hansını nə vaxt istifadə etməli?</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>CROSS JOIN</strong> → Bütün mümkün kombinasiyalara ehtiyacınız olduqda</li>
+                            <li><strong>SELF JOIN</strong> → Bir cədvəlin daxilindəki əlaqələri araşdırmaq lazım olduqda</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 9 -->
+            <div class="slide" id="slide9">
+                <h2 class="slide-title">8. Praktik Tətbiqlər</h2>
+                <div class="slide-content">
+                    <h3>CROSS JOIN tətbiqləri:</h3>
+                    <div class="success-box">
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>✅ Bütün mümkün variantların generasiyası</strong> - Məsələn, bütün rəng və ölçü kombinasiyaları</li>
+                            <li><strong>✅ Test məlumatlarının yaradılması</strong> - Müxtəlif parametrlər üçün test dataları</li>
+                            <li><strong>✅ Kombinator məsələləri</strong> - Ehtimal hesablamaları, statistik analiz</li>
+                            <li><strong>✅ Tarix aralıqlarının generasiyası</strong> - Bütün gün və saat kombinasiyaları</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>SELF JOIN tətbiqləri:</h3>
+                    <div class="success-box">
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>✅ İyerarxik strukturlar</strong> - Menecer-işçi münasibətləri, təşkilat quruluşu</li>
+                            <li><strong>✅ Ardıcıl tarixlərin müqayisəsi</strong> - Əvvəlki/gələn günlərin məlumatlarını müqayisə</li>
+                            <li><strong>✅ Qraf traversalları</strong> - Dost şəbəkələri, sosial media əlaqələri</li>
+                            <li><strong>✅ Eyni kateqoriyadakı məhsullar</strong> - Oxşar məhsulların qruplaşdırılması</li>
+                            <li><strong>✅ İşçilərin cütləşdirilməsi</strong> - Eyni ixtisaslı işçilərin tapılması</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 10 -->
+            <div class="slide" id="slide10">
+                <h2 class="slide-title">9. Əhəmiyyətli Qeydlər</h2>
+                <div class="slide-content">
+                    <div class="content-box">
+                        <h3>CROSS JOIN üçün:</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>📏 Böyük cədvəllərdə diqqətli istifadə edin</strong> - Nəticə sayı çox sürətlə artır</li>
+                            <li><strong>🧪 Test məqsədli istifadə məqsədəuyğundur</strong> - Məhdud sayda məlumatla işləyərkən</li>
+                            <li><strong>⚡ WHERE şərti ilə məhdudlaşdırın</strong> - Lazım olmayan kombinasiyaları filtirləyin</li>
+                            <li><strong>🔢 Nəticə sayını əvvəlcədən hesablayın</strong> - Performans probleminin qarşısını almaq üçün</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="content-box">
+                        <h3>SELF JOIN üçün:</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>🏷️ Alias (ləqəb) mütləqdir</strong> - Cədvəli iki fərqli adla çağırmaq lazımdır</li>
+                            <li><strong>🔄 Dövr yarada bilər</strong> - Recursive münasibətlərdə diqqətli olun</li>
+                            <li><strong>🚀 İndeksləmə performansı yaxşılaşdırır</strong> - JOIN şərtində olan sütunları indeksləyin</li>
+                            <li><strong>🎯 Düzgün JOIN növünü seçin</strong> - INNER, LEFT, RIGHT və ya FULL JOIN</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 11 -->
+            <div class="slide" id="slide11">
+                <h2 class="slide-title">10. Praktik Məsləhətlər</h2>
+                <div class="slide-content">
+                    <div class="content-box">
+                        <h3>Ümumi məsləhətlər:</h3>
+                        <ol style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>CROSS JOIN-dən əvvəl cədvəl ölçülərini yoxlayın</strong> - EXPLAIN və ya COUNT() istifadə edin</li>
+                            <li><strong>SELF JOIN-də indeksləri optimallaşdırın</strong> - JOIN şərtindəki sütunları indeksləyin</li>
+                            <li><strong>Hər iki JOIN üçün EXPLAIN istifadə edin</strong> - Sorğu planını analiz edin</li>
+                            <li><strong>Limit ilə nəticə sayını məhdudlaşdırın</strong> - Xüsusilə test zamanı</li>
+                            <li><strong>Subquery alternativlərini nəzərdən keçirin</strong> - Bəzən subquery daha səmərəli ola bilər</li>
+                            <li><strong>CTE (Common Table Expressions) istifadə edin</strong> - Mürəkkəb SELF JOIN sorğuları üçün</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 Performans optimallaşdırması:</strong> Hər iki JOIN növündə də, böyük cədvəllər üzərində işləyərkən, lazımsız sütunları SELECT ifadəsinə daxil etməyin və yalnız lazım olan sütunları seçin.
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Təhlükəli nümunə:</strong> 10.000 sətirli bir cədvəli özü ilə CROSS JOIN etmək 100 milyon sətir nəticə verə bilər ki, bu da serveri çökdürə bilər!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 12 -->
+            <div class="slide" id="slide12">
+                <h2 class="slide-title">Nəticə</h2>
+                <div class="slide-content">
+                    <div class="content-box" style="text-align: center; background: linear-gradient(to right, #e3f2fd, #bbdefb);">
+                        <h2 style="color: #1565c0; margin-bottom: 20px;">SQL JOIN: Güc və Dəqiqlik</h2>
+                        <p style="font-size: 1.3rem; margin-bottom: 25px;"><strong>CROSS JOIN</strong> və <strong>SELF JOIN</strong> SQL-in güclü alətləridir:</p>
+                        
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 30px;">
+                            <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                <h3 style="color: #e74c3c;">✅ CROSS JOIN</h3>
+                                <p><strong>Kombinator məsələlər</strong> üçün</p>
+                                <p>Bütün mümkün variantları yaradır</p>
+                            </div>
+                            
+                            <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                                <h3 style="color: #2ecc71;">✅ SELF JOIN</h3>
+                                <p><strong>İçəri münasibətlər</strong> üçün</p>
+                                <p>Bir cədvəlin daxilində əlaqələri tapır</p>
+                            </div>
+                        </div>
+                        
+                        <div class="warning-box" style="text-align: left;">
+                            <strong>⚡ Diqqət:</strong> Hər ikisi diqqətlə istifadə edilməlidir, xüsusilə böyük verilənlər bazalarında.
+                        </div>
+                        
+                        <div class="success-box" style="text-align: left; margin-top: 20px;">
+                            <strong>🎯 Yekun mesaj:</strong> Düzgün tətbiq edildikdə, bu JOIN növləri mürəkkəb verilənlər münasibətlərini həll etmək üçün çox faydalı ola bilər.
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 40px; padding: 20px; background-color: #f5f5f5; border-radius: 10px;">
+                        <h3 style="color: #2c3e50;">Təşəkkürlər!</h3>
+                        <p>SQL JOIN növləri haqqında bu təqdimatı izlədiyiniz üçün təşəkkür edirik.</p>
+                        <p style="margin-top: 15px; font-style: italic;">"Verilənlər bazası sorğularında məharət, JOIN-ləri dərindən başa düşməkdən keçir."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn" disabled>← Əvvəlki</button>
+            <div class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">12</span>
+            </div>
+            <button class="nav-btn" id="nextBtn">Növbəti →</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            const currentSlideElement = document.getElementById('currentSlide');
+            const totalSlidesElement = document.getElementById('totalSlides');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            let currentSlideIndex = 0;
+            
+            // Set total slides count
+            totalSlidesElement.textContent = totalSlides;
+            
+            // Function to update slides
+            function updateSlide() {
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Show current slide
+                slides[currentSlideIndex].classList.add('active');
+                
+                // Update slide counter
+                currentSlideElement.textContent = currentSlideIndex + 1;
+                
+                // Update buttons
+                prevBtn.disabled = currentSlideIndex === 0;
+                nextBtn.disabled = currentSlideIndex === totalSlides - 1;
+                
+                // Add animation effect
+                const activeSlide = document.querySelector('.slide.active');
+                activeSlide.style.animation = 'none';
+                setTimeout(() => {
+                    activeSlide.style.animation = 'fadeIn 0.8s ease';
+                }, 10);
+            }
+            
+            // Next button click
+            nextBtn.addEventListener('click', function() {
+                if (currentSlideIndex < totalSlides - 1) {
+                    currentSlideIndex++;
+                    updateSlide();
+                }
+            });
+            
+            // Previous button click
+            prevBtn.addEventListener('click', function() {
+                if (currentSlideIndex > 0) {
+                    currentSlideIndex--;
+                    updateSlide();
+                }
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    // Next slide with right arrow or space
+                    if (currentSlideIndex < totalSlides - 1) {
+                        currentSlideIndex++;
+                        updateSlide();
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    // Previous slide with left arrow
+                    if (currentSlideIndex > 0) {
+                        currentSlideIndex--;
+                        updateSlide();
+                    }
+                }
+            });
+            
+            // Initialize
+            updateSlide();
+        });
+    </script>
+</body>
+</html>
