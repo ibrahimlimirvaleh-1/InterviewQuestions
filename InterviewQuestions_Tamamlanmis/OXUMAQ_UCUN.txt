@@ -1,0 +1,16 @@
+﻿INTERVIEW HAZIRLIQ PAKETI
+
+Başlamaq üçün Senior_Backend_Tam_Beledci.pdf faylını aç.
+Bu kitab 9 yenilənmiş dərsi birləşdirir və 53 səhifədir.
+
+00_Analiz_ve_Oxu_Plani.pdf mənbələrdə tapılan boşluqları, düzəlişləri,
+yarımçıq HTML fayllarını, oxu ardıcıllığını və 86 faylın inventarını göstərir.
+
+01_Original_PDF - 78 ilkin PDF-in dəyişdirilməmiş surəti.
+02_Cevrilmis_PDF - HTML, Word və PowerPoint-dən çevrilmiş 8 PDF.
+03_Tamamlanmis_Movzular - 9 ayrıca yenilənmiş dərs.
+Fayl_Xeritesi.json - 86 mənbənin nəticəyə uyğunluq xəritəsi.
+
+İlkin fayllardakı yanlış və yarımçıq izahlar ayrıca yeni dərslərdə düzəldilib.
+Öyrənərkən əsas mənbə kimi yeni dərsləri istifadə et.
+Desktop-dakı ilkin qovluğa dəyişiklik edilməyib.

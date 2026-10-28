@@ -1,0 +1,604 @@
+[
+  {
+    "source": "Access Modifiers.pdf",
+    "output": "01_Original_PDF/Access Modifiers.pdf",
+    "source_type": ".pdf",
+    "pages": 11,
+    "sha256": "fccf1b66d6996c401061044c4b9452b6aec7a51f2b83d31c4ea184e0a5c8c4df"
+  },
+  {
+    "source": "ADO.NET.pdf",
+    "output": "01_Original_PDF/ADO.NET.pdf",
+    "source_type": ".pdf",
+    "pages": 10,
+    "sha256": "6e611759959dbd60cd8cb2fed6e86055d6b0353bb563cb58a9700a73f27e9d33"
+  },
+  {
+    "source": "Backend_System_Design_Roadmap/00_Roadmap_90_Gun_Backend_System_Design.pdf",
+    "output": "01_Original_PDF/Backend_System_Design_Roadmap/00_Roadmap_90_Gun_Backend_System_Design.pdf",
+    "source_type": ".pdf",
+    "pages": 7,
+    "sha256": "2653a1892d4c75b19919120ba7ed25f1024b1b7b150f22ec533a57265eb59569"
+  },
+  {
+    "source": "Backend_System_Design_Roadmap/01_Backend_Core_Days_01_30.pdf",
+    "output": "01_Original_PDF/Backend_System_Design_Roadmap/01_Backend_Core_Days_01_30.pdf",
+    "source_type": ".pdf",
+    "pages": 31,
+    "sha256": "abe25e252aeaa79636c332fa839ecd08c463de2fcb41c04146748e1193f9f7b1"
+  },
+  {
+    "source": "Backend_System_Design_Roadmap/02_System_Design_Architecture_Days_31_60.pdf",
+    "output": "01_Original_PDF/Backend_System_Design_Roadmap/02_System_Design_Architecture_Days_31_60.pdf",
+    "source_type": ".pdf",
+    "pages": 31,
+    "sha256": "38167c53624d9be8764cb89206247265b36a76f821af414f103f20a500734696"
+  },
+  {
+    "source": "Backend_System_Design_Roadmap/03_Design_Patterns_Production_Days_61_90.pdf",
+    "output": "01_Original_PDF/Backend_System_Design_Roadmap/03_Design_Patterns_Production_Days_61_90.pdf",
+    "source_type": ".pdf",
+    "pages": 31,
+    "sha256": "d25c71eaa33aab9122f89ddcadd3b1b93557eb01f9b7a75a41ebfab1624cce62"
+  },
+  {
+    "source": "Backend_System_Design_Roadmap/Day_01_Backend_Server_Mental_Model_Dersi.pdf",
+    "output": "01_Original_PDF/Backend_System_Design_Roadmap/Day_01_Backend_Server_Mental_Model_Dersi.pdf",
+    "source_type": ".pdf",
+    "pages": 20,
+    "sha256": "182086bbb6575c07ca8866eb025c3cc1476e6d672df01fe5839d9ca5af96eeed"
+  },
+  {
+    "source": "Backend_System_Design_Roadmap/Day_02_Process_File_Descriptor_Shell_Dersi.pdf",
+    "output": "01_Original_PDF/Backend_System_Design_Roadmap/Day_02_Process_File_Descriptor_Shell_Dersi.pdf",
+    "source_type": ".pdf",
+    "pages": 19,
+    "sha256": "9ae5f09f13bbcaa85f3a5a310f6ea654d033da4a61edda8ee6ea484eb670b876"
+  },
+  {
+    "source": "browser_storage.pdf",
+    "output": "01_Original_PDF/browser_storage.pdf",
+    "source_type": ".pdf",
+    "pages": 14,
+    "sha256": "31b7fb4d7a73189a47ee84a809a43e0290808f0fe71995abaa35aee62e0bd534"
+  },
+  {
+    "source": "CAP Teorem.pdf",
+    "output": "01_Original_PDF/CAP Teorem.pdf",
+    "source_type": ".pdf",
+    "pages": 17,
+    "sha256": "5fa098db4b0eab0405cb9719bf53ef05ae498b3c70a9d92e62a6efe19ba99ccb"
+  },
+  {
+    "source": "clr_gc_heap.pdf",
+    "output": "01_Original_PDF/clr_gc_heap.pdf",
+    "source_type": ".pdf",
+    "pages": 14,
+    "sha256": "8eae013c1f231169f19821a0f4f5aafc2fec20d44528af7430b57b34f616aa43"
+  },
+  {
+    "source": "Common Language Runtime.pdf",
+    "output": "01_Original_PDF/Common Language Runtime.pdf",
+    "source_type": ".pdf",
+    "pages": 16,
+    "sha256": "c91670b03b58316efa7bd880fe281972418353e54d55eff30d9cb6767fbae6a3"
+  },
+  {
+    "source": "CSharp-yield-izahi.pdf",
+    "output": "01_Original_PDF/CSharp-yield-izahi.pdf",
+    "source_type": ".pdf",
+    "pages": 5,
+    "sha256": "a64ea3c03d635a183831c75de5644a8ee2ede76e46dfbb9a8e748196fba65bbe"
+  },
+  {
+    "source": "Databaseİndexing.html",
+    "output": "02_Cevrilmis_PDF/Databaseİndexing.pdf",
+    "source_type": ".html",
+    "pages": 21,
+    "sha256": "babf54332ac7814ce746047638d2eca663f26bc092d690035db4055e03ec00c9"
+  },
+  {
+    "source": "DB_Arxitektura.pdf",
+    "output": "01_Original_PDF/DB_Arxitektura.pdf",
+    "source_type": ".pdf",
+    "pages": 20,
+    "sha256": "c18c111c691f2afe6a4b0af18f5429815a3b8a75ca70ea25f893156253feac86"
+  },
+  {
+    "source": "Deleqatlar.pdf",
+    "output": "01_Original_PDF/Deleqatlar.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "cb5cfaaed5b06542e1e118225a88aefea72db5d0e7456b21f57637a9b7591c08"
+  },
+  {
+    "source": "Denormalizasiya.pdf",
+    "output": "01_Original_PDF/Denormalizasiya.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "6e3e2c55cb68773e8948055eab24cf0bb4c77d2a149f005366d7d15f27d50bb4"
+  },
+  {
+    "source": "DependencyInjection.pdf",
+    "output": "01_Original_PDF/DependencyInjection.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "fac6ef1f348f03f3190091faafdca32046703dd50abb7b094d50d5e5bca2b0de"
+  },
+  {
+    "source": "Design Patterns.pptx",
+    "output": "02_Cevrilmis_PDF/Design Patterns.pdf",
+    "source_type": ".pptx",
+    "pages": 37,
+    "sha256": "87030301fe43b46acd613d8e58196e35ea2bb112a5b3e8329877e6d73f2ed46e"
+  },
+  {
+    "source": "di_practical.pdf",
+    "output": "01_Original_PDF/di_practical.pdf",
+    "source_type": ".pdf",
+    "pages": 15,
+    "sha256": "24f537c9d7972211c7970ff9fb1f54fadf6f419b4f4f4d38205f4279f287d8a7"
+  },
+  {
+    "source": "Dispose_Method_Explained.pdf",
+    "output": "01_Original_PDF/Dispose_Method_Explained.pdf",
+    "source_type": ".pdf",
+    "pages": 6,
+    "sha256": "1782020cfe00091b424056c3286cf02384b8b886287f637407a7b92b6ca030b9"
+  },
+  {
+    "source": "Distributed System.pdf",
+    "output": "01_Original_PDF/Distributed System.pdf",
+    "source_type": ".pdf",
+    "pages": 18,
+    "sha256": "6b4425f8097fb42e6872ddaa1f6f0ad44461e3f22d5efccd915f1ce06d967937"
+  },
+  {
+    "source": "Docker.pdf",
+    "output": "01_Original_PDF/Docker.pdf",
+    "source_type": ".pdf",
+    "pages": 16,
+    "sha256": "dc858a98bdddbb004b68e4acfa123cc9b876ade32ee8417576bf0042a624b130"
+  },
+  {
+    "source": "dotnet_auth.pdf",
+    "output": "01_Original_PDF/dotnet_auth.pdf",
+    "source_type": ".pdf",
+    "pages": 21,
+    "sha256": "624f2a81ec1ec939cec63869bd382ea2d5123e713d49fdf3c2e85c091f4d890a"
+  },
+  {
+    "source": "dotnet_cli_sdk.pdf",
+    "output": "01_Original_PDF/dotnet_cli_sdk.pdf",
+    "source_type": ".pdf",
+    "pages": 17,
+    "sha256": "0676607b1450accaeb78666a519d58fd254b0dd67e431fd139ed7f04d986ea52"
+  },
+  {
+    "source": "dotnet_cli_sdk1.pdf",
+    "output": "01_Original_PDF/dotnet_cli_sdk1.pdf",
+    "source_type": ".pdf",
+    "pages": 15,
+    "sha256": "9c3661eee77af7ed638c2d5bd59dbfea846f8237cb33f9a54b1efc11243210da"
+  },
+  {
+    "source": "dotnet_core_mvc_authentication.pdf",
+    "output": "01_Original_PDF/dotnet_core_mvc_authentication.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "26dff964a4098ac3b00b6538fab829c1e913f8a9ef95a0e62d7cc4aff824a374"
+  },
+  {
+    "source": "dotnet_faza0_az.pdf",
+    "output": "01_Original_PDF/dotnet_faza0_az.pdf",
+    "source_type": ".pdf",
+    "pages": 11,
+    "sha256": "a2a3f267f9dc05440e5573706c65b68382e5b6347bdbc8a721dff1b0223819ab"
+  },
+  {
+    "source": "ecafe-auth-session-flow.pdf",
+    "output": "01_Original_PDF/ecafe-auth-session-flow.pdf",
+    "source_type": ".pdf",
+    "pages": 7,
+    "sha256": "35735ff304ed89d72172e1ad48a85a2ee140144b6f1731bcb3686c4e1233866f"
+  },
+  {
+    "source": "ECafe_SignalR_RealTime_Logout_Izahi.pdf",
+    "output": "01_Original_PDF/ECafe_SignalR_RealTime_Logout_Izahi.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "857e31c4be31cc9f5e9fa07f5ae64ec84a7275fcee1105b4a9412f9b3a6d68f1"
+  },
+  {
+    "source": "ef_core_tracking.pdf",
+    "output": "01_Original_PDF/ef_core_tracking.pdf",
+    "source_type": ".pdf",
+    "pages": 4,
+    "sha256": "7b3a369234c1fe464483c10b5bf73b85a7d1f89fb55d973b522c0fc36b8a48d0"
+  },
+  {
+    "source": "ElasticSearch & Kibana.pdf",
+    "output": "01_Original_PDF/ElasticSearch & Kibana.pdf",
+    "source_type": ".pdf",
+    "pages": 20,
+    "sha256": "5d8cc745337d0c0e6dff9a21de2deb6615ecdb59590fabdf7d2d86bc2b96aa0b"
+  },
+  {
+    "source": "Enum.pdf",
+    "output": "01_Original_PDF/Enum.pdf",
+    "source_type": ".pdf",
+    "pages": 18,
+    "sha256": "370c5fab212719dbfc8ebe36b1777b3aea6c2deacfec527fbb06644f6bc89632"
+  },
+  {
+    "source": "Event.pdf",
+    "output": "01_Original_PDF/Event.pdf",
+    "source_type": ".pdf",
+    "pages": 7,
+    "sha256": "df2de7a87247d4dbe556ca97a2ac75c1440ffd1fbcd2c611bb929e7508471ac0"
+  },
+  {
+    "source": "expression_tree.pdf",
+    "output": "01_Original_PDF/expression_tree.pdf",
+    "source_type": ".pdf",
+    "pages": 21,
+    "sha256": "53166eed74214eb077f816b87916ab3aed935d8b888083a0f13cb6943a558d81"
+  },
+  {
+    "source": "files/01_dotnet_core_fundamentals.pdf",
+    "output": "01_Original_PDF/files/01_dotnet_core_fundamentals.pdf",
+    "source_type": ".pdf",
+    "pages": 10,
+    "sha256": "254cdb56ed2c9a848fe3e6b26c1b85d17d60d1fee66a0c45cb7729b6a600bf00"
+  },
+  {
+    "source": "files/02_aspnet_core.pdf",
+    "output": "01_Original_PDF/files/02_aspnet_core.pdf",
+    "source_type": ".pdf",
+    "pages": 7,
+    "sha256": "b94fb4589f41fd4bd549451693268a4ef760e564a72f2304218d94e875a8899a"
+  },
+  {
+    "source": "files/03_di_architecture.pdf",
+    "output": "01_Original_PDF/files/03_di_architecture.pdf",
+    "source_type": ".pdf",
+    "pages": 5,
+    "sha256": "c61102933b56e096b0d8ee284b82e99a9df1120a322ac89cc666451c5895f52f"
+  },
+  {
+    "source": "files/04_ef_core.pdf",
+    "output": "01_Original_PDF/files/04_ef_core.pdf",
+    "source_type": ".pdf",
+    "pages": 5,
+    "sha256": "5ecfa7375ba0e27f8647d79e58b7aab48d4deddf8a7aafaf1e8682a89efdb987"
+  },
+  {
+    "source": "files/05_sql.pdf",
+    "output": "01_Original_PDF/files/05_sql.pdf",
+    "source_type": ".pdf",
+    "pages": 5,
+    "sha256": "e1bfccec9ddf66f6f5a7461ede5d41270defa7f4579574fd115faf084b753f11"
+  },
+  {
+    "source": "files/06_testing.pdf",
+    "output": "01_Original_PDF/files/06_testing.pdf",
+    "source_type": ".pdf",
+    "pages": 4,
+    "sha256": "789779e1d8d3b0bcad995697827d821fb33e9e6d1019ab2ae0dee59a5a5a9b0d"
+  },
+  {
+    "source": "files/07_security.pdf",
+    "output": "01_Original_PDF/files/07_security.pdf",
+    "source_type": ".pdf",
+    "pages": 6,
+    "sha256": "676d56d7dc54c6612231bc1c303415b4715803ab417aa55c7b0b33103c113e9a"
+  },
+  {
+    "source": "files/08_production_mindset.pdf",
+    "output": "01_Original_PDF/files/08_production_mindset.pdf",
+    "source_type": ".pdf",
+    "pages": 6,
+    "sha256": "f77e88bef2cf04d54dcce4fb6d8c4f8daec86cf6797abfcc59fbc1dc77d1f5c1"
+  },
+  {
+    "source": "GIST&GIN&BRIN_Index.html",
+    "output": "02_Cevrilmis_PDF/GIST&GIN&BRIN_Index.pdf",
+    "source_type": ".html",
+    "pages": 8,
+    "sha256": "867a103452d761d7ad7c9e31071d59ce6ebcae3c9bc7deca056da041e799a432"
+  },
+  {
+    "source": "hard&softDelete.html",
+    "output": "02_Cevrilmis_PDF/hard&softDelete.pdf",
+    "source_type": ".html",
+    "pages": 12,
+    "sha256": "8fd9b4880f33e2679f0dc2276970c602b5c0026cd4ffc8d75b40c010f614c667"
+  },
+  {
+    "source": "ideabank-xlsx-upload-problemi-derin-izah.pdf",
+    "output": "01_Original_PDF/ideabank-xlsx-upload-problemi-derin-izah.pdf",
+    "source_type": ".pdf",
+    "pages": 6,
+    "sha256": "11f1c02d684a208b413cd721931dddf351d095a2051a63d5dca59d2e13e41dc0"
+  },
+  {
+    "source": "innercrossself.html",
+    "output": "02_Cevrilmis_PDF/innercrossself.pdf",
+    "source_type": ".html",
+    "pages": 15,
+    "sha256": "47b9566d4715aa0b62125aa4b7073572c3ab838cf3c7b29163bc47b3b751c929"
+  },
+  {
+    "source": "iqueryable_ienumerable.pdf",
+    "output": "01_Original_PDF/iqueryable_ienumerable.pdf",
+    "source_type": ".pdf",
+    "pages": 4,
+    "sha256": "af15c7df35c5a35cd4125caf8cae9d4801934d5b59f8bec697cb333748a17c34"
+  },
+  {
+    "source": "join.html",
+    "output": "02_Cevrilmis_PDF/join.pdf",
+    "source_type": ".html",
+    "pages": 15,
+    "sha256": "5d08cc56698afa7ab2311dd382f058f8d86592a13f583cf312c73ebc50a288c2"
+  },
+  {
+    "source": "kafka.pdf",
+    "output": "01_Original_PDF/kafka.pdf",
+    "source_type": ".pdf",
+    "pages": 29,
+    "sha256": "32e1c7e80dfc8303d0a8015c52af0a1b07853595bbe7a95ff3b9f68c51df4b8c"
+  },
+  {
+    "source": "kubernetes_docker_redis_socket_visual_guide.pdf",
+    "output": "01_Original_PDF/kubernetes_docker_redis_socket_visual_guide.pdf",
+    "source_type": ".pdf",
+    "pages": 19,
+    "sha256": "e64d38ef5ef3b895f37675df2028264e31d8d43be65af81b95e7cd0433a2ee23"
+  },
+  {
+    "source": "leftJoin.html",
+    "output": "02_Cevrilmis_PDF/leftJoin.pdf",
+    "source_type": ".html",
+    "pages": 3,
+    "sha256": "0f5ff1b0ea50d241cc3fc7508fcaf7ae24622f27a4263a9a088301eef99ad045"
+  },
+  {
+    "source": "LİNQ.pdf",
+    "output": "01_Original_PDF/LİNQ.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "c2753968c706fd4d160a1921dbc422e1f0d958c378585fa967397473ae85060c"
+  },
+  {
+    "source": "Monolit_Mikroservis_Arxitektura.pdf",
+    "output": "01_Original_PDF/Monolit_Mikroservis_Arxitektura.pdf",
+    "source_type": ".pdf",
+    "pages": 33,
+    "sha256": "dd2dfaa62839386a277e0d2bb904be1e6f945125a73ce296663f5baa33383599"
+  },
+  {
+    "source": "monolit_mikroservis_az.pdf",
+    "output": "01_Original_PDF/monolit_mikroservis_az.pdf",
+    "source_type": ".pdf",
+    "pages": 14,
+    "sha256": "7bc2fed1a1b02d850861b8249cc102a9e1fc41f63d1a6930f8346a3952889e9c"
+  },
+  {
+    "source": "MSSQL_Functions_AdventureWorks.pdf",
+    "output": "01_Original_PDF/MSSQL_Functions_AdventureWorks.pdf",
+    "source_type": ".pdf",
+    "pages": 18,
+    "sha256": "d79e7d323c3ee1fda9bd0d655c85e2228aceb694771b0f9e4f2f2441bb990d42"
+  },
+  {
+    "source": "MSSQL_Functions_AZ.pdf",
+    "output": "01_Original_PDF/MSSQL_Functions_AZ.pdf",
+    "source_type": ".pdf",
+    "pages": 21,
+    "sha256": "0047c351814b8239ab1aace0cdc2a082500f85b810229d1dc2592aed7b43284d"
+  },
+  {
+    "source": "MSSQL_Genis_Ders_Transaction_ACID_Isolation_Session_Pooling.pdf",
+    "output": "01_Original_PDF/MSSQL_Genis_Ders_Transaction_ACID_Isolation_Session_Pooling.pdf",
+    "source_type": ".pdf",
+    "pages": 15,
+    "sha256": "d09800e4930b487fd6ec5f144a703e1e0e10fe5b6e22cdf3fc1e5de84439f369"
+  },
+  {
+    "source": "MSSQL_Tehsil_Materiallari (1).pdf",
+    "output": "01_Original_PDF/MSSQL_Tehsil_Materiallari (1).pdf",
+    "source_type": ".pdf",
+    "pages": 44,
+    "sha256": "f43f99fcda8ac94e679d2697c22b91aa25dd5dc688daa3df4c878934e127196f"
+  },
+  {
+    "source": "MSSQL_Tehsil_Materiallari.pdf",
+    "output": "01_Original_PDF/MSSQL_Tehsil_Materiallari.pdf",
+    "source_type": ".pdf",
+    "pages": 46,
+    "sha256": "d73ed8ce6ab4860671349541437b382b9df87301372bf8d2adbd9cfeb93570d5"
+  },
+  {
+    "source": "Müsahibə sualları.docx",
+    "output": "02_Cevrilmis_PDF/Müsahibə sualları.pdf",
+    "source_type": ".docx",
+    "pages": 5,
+    "sha256": "cd70263a0b054f1d5ad2374d532fb2d46d0109df764ebcf61a244afd8c639d1b"
+  },
+  {
+    "source": "net-core-mvc-axtaris-pagination-izah.pdf",
+    "output": "01_Original_PDF/net-core-mvc-axtaris-pagination-izah.pdf",
+    "source_type": ".pdf",
+    "pages": 9,
+    "sha256": "09aefbaed37d78af34697aa9cef1c4c299de83bb508528378155de09eb6b0747"
+  },
+  {
+    "source": "Onion_Arxitektura.pdf",
+    "output": "01_Original_PDF/Onion_Arxitektura.pdf",
+    "source_type": ".pdf",
+    "pages": 18,
+    "sha256": "fa324ee7a4ba1e16289ff63849878917df2ba0018a6eb91275d753438bcb3a20"
+  },
+  {
+    "source": "OOP Nədir.pdf",
+    "output": "01_Original_PDF/OOP Nədir.pdf",
+    "source_type": ".pdf",
+    "pages": 7,
+    "sha256": "cf2dd3be50f998b43a51d94b66cc6d41bf335d1ee1120597783f4572ff94d3ed"
+  },
+  {
+    "source": "OOP prinsipləri.pdf",
+    "output": "01_Original_PDF/OOP prinsipləri.pdf",
+    "source_type": ".pdf",
+    "pages": 47,
+    "sha256": "aec33b3237debe43960d909ee2aa62fb085d03ea0303276ded9ea3772a96bb37"
+  },
+  {
+    "source": "postgresql-advisory-lock-derin-beledci.pdf",
+    "output": "01_Original_PDF/postgresql-advisory-lock-derin-beledci.pdf",
+    "source_type": ".pdf",
+    "pages": 22,
+    "sha256": "a5539416c4bce203cac8cf4859a9e8267f692dd18be99807ac2795a29e238469"
+  },
+  {
+    "source": "postgresql-isolation-levels-derin-beledci.pdf",
+    "output": "01_Original_PDF/postgresql-isolation-levels-derin-beledci.pdf",
+    "source_type": ".pdf",
+    "pages": 45,
+    "sha256": "0211e16c0c509986d33e3d7d33a7d120ba3a14ab7e736155a5cfc6d060a9b640"
+  },
+  {
+    "source": "RabbitMQ_Beledci.pdf",
+    "output": "01_Original_PDF/RabbitMQ_Beledci.pdf",
+    "source_type": ".pdf",
+    "pages": 7,
+    "sha256": "99c2d7eaedaad8aacc523de5e16d88e5ad7f3f246b2da0bab080746a5eec1a92"
+  },
+  {
+    "source": "RAM_Stack_Heap.pdf",
+    "output": "01_Original_PDF/RAM_Stack_Heap.pdf",
+    "source_type": ".pdf",
+    "pages": 13,
+    "sha256": "6f8af6d1cfd3268ebe85be4822be87df9f6352772642a6118e1b44eeec66c361"
+  },
+  {
+    "source": "redis_interview.pdf",
+    "output": "01_Original_PDF/redis_interview.pdf",
+    "source_type": ".pdf",
+    "pages": 6,
+    "sha256": "5c903d4c8b07a21fad2757435b41cb2272dc1cef76bd29618af21eb80a3ee445"
+  },
+  {
+    "source": "redis_rehberi.pdf",
+    "output": "01_Original_PDF/redis_rehberi.pdf",
+    "source_type": ".pdf",
+    "pages": 5,
+    "sha256": "2f92798be7747945142d2e0fca6d310071f4580275516126514b2a435a369e18"
+  },
+  {
+    "source": "REF,OUT.pdf",
+    "output": "01_Original_PDF/REF,OUT.pdf",
+    "source_type": ".pdf",
+    "pages": 5,
+    "sha256": "28e30dc454569058ee8e1a3314119a6ba4df0abbcb389b856e0c9fbcfbb874ae"
+  },
+  {
+    "source": "Reflection.pdf",
+    "output": "01_Original_PDF/Reflection.pdf",
+    "source_type": ".pdf",
+    "pages": 15,
+    "sha256": "d4abc691fcc8d9e8f2e28d769079361f08003313ae79c9c6481517e6d2167a75"
+  },
+  {
+    "source": "rest_api.pdf",
+    "output": "01_Original_PDF/rest_api.pdf",
+    "source_type": ".pdf",
+    "pages": 10,
+    "sha256": "a015c37435381f35d359ca02aca4a1cc1b0131262d7fe300f7b5dee7a735ec71"
+  },
+  {
+    "source": "SETNOCOUNT_Teqdimat.pdf",
+    "output": "01_Original_PDF/SETNOCOUNT_Teqdimat.pdf",
+    "source_type": ".pdf",
+    "pages": 8,
+    "sha256": "e59cc65af8af8bf550469e5c90a62ae893acd9ad62535f90b7ce39a3d64bbc67"
+  },
+  {
+    "source": "Sinxron Proqramlaşdırma.pdf",
+    "output": "01_Original_PDF/Sinxron Proqramlaşdırma.pdf",
+    "source_type": ".pdf",
+    "pages": 39,
+    "sha256": "9fa88314fbd7fca952906d24ad63f47a9e6dac3a6f4976be18ebdbc66cdf9ec9"
+  },
+  {
+    "source": "sprint/sprint1_lesson.pdf",
+    "output": "01_Original_PDF/sprint/sprint1_lesson.pdf",
+    "source_type": ".pdf",
+    "pages": 12,
+    "sha256": "937cfc69009ea056bb1211e44284180e635d94cc6b618d3af6e04544d4ba4ef8"
+  },
+  {
+    "source": "SQL soft delete mexanizmi və istifadəsi.pdf",
+    "output": "01_Original_PDF/SQL soft delete mexanizmi və istifadəsi.pdf",
+    "source_type": ".pdf",
+    "pages": 1,
+    "sha256": "f85f4b15b51f0a4eff8b2795aec189bf460a05278b61be1583398749b7d537af"
+  },
+  {
+    "source": "SQL-də Soft Delete - Nəzəri və Praktiki Bələdçi.pdf",
+    "output": "01_Original_PDF/SQL-də Soft Delete - Nəzəri və Praktiki Bələdçi.pdf",
+    "source_type": ".pdf",
+    "pages": 17,
+    "sha256": "80c151160cea2bb13e64b394b7ad4fe0e795c82f0669856850503c37f678217a"
+  },
+  {
+    "source": "SQL-in Daxili İşləmə Prinsipləri və Məlumatların Saxlanma.pdf",
+    "output": "01_Original_PDF/SQL-in Daxili İşləmə Prinsipləri və Məlumatların Saxlanma.pdf",
+    "source_type": ".pdf",
+    "pages": 16,
+    "sha256": "a7714fd5de20e0b016cad2b0b7f3ee537b5fa648e48f2438902f63792e616330"
+  },
+  {
+    "source": "SQL_Normalizasiya_Denormalizasiya.pdf",
+    "output": "01_Original_PDF/SQL_Normalizasiya_Denormalizasiya.pdf",
+    "source_type": ".pdf",
+    "pages": 15,
+    "sha256": "9ca2061dd4c2aaa5f5e3aa6ec9898b7bb6919e37a705dfb7ee57e9dec466116d"
+  },
+  {
+    "source": "SQL_Triggerlər.pdf",
+    "output": "01_Original_PDF/SQL_Triggerlər.pdf",
+    "source_type": ".pdf",
+    "pages": 16,
+    "sha256": "0ba3b7fcee4e07473c9b2a585f93e15a5585a57cdb95174b3eeeecce7b51294d"
+  },
+  {
+    "source": "ssh_key_proxy_reverse_proxy_sade_izahli_az.pdf",
+    "output": "01_Original_PDF/ssh_key_proxy_reverse_proxy_sade_izahli_az.pdf",
+    "source_type": ".pdf",
+    "pages": 12,
+    "sha256": "8e74a556041d29a5fc9ac2777db25ec8711fb3f7c70e1c09d5b34be7145ee190"
+  },
+  {
+    "source": "Static Constructor nədir.pdf",
+    "output": "01_Original_PDF/Static Constructor nədir.pdf",
+    "source_type": ".pdf",
+    "pages": 6,
+    "sha256": "46202576f3acbc4ea6ae4d1108e41b067ff1783df74da767b9378458560ac5bd"
+  },
+  {
+    "source": "Transaction_Isolation_Levels_ECafe.pdf",
+    "output": "01_Original_PDF/Transaction_Isolation_Levels_ECafe.pdf",
+    "source_type": ".pdf",
+    "pages": 9,
+    "sha256": "3117ca628ef335314ffe38b982c5d2025a8de312015e962174b1032a0e6c17c2"
+  },
+  {
+    "source": "TwoPhaseCommit.pdf",
+    "output": "01_Original_PDF/TwoPhaseCommit.pdf",
+    "source_type": ".pdf",
+    "pages": 13,
+    "sha256": "bd03fb966378343bbef1e619635bf94f41864329c5d5e99cbb61b2390dbd0389"
+  }
+]
