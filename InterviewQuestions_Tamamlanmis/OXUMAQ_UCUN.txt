@@ -9,6 +9,11 @@ container, scope, resolve və lifetime-lar bu ardıcıllıqla izah olunur.
 Constructor və lifetime nümunələri işlədilərək yoxlanılıb.
 Repozitoriyanın kökündəki DependencyInjection.pdf bu yeni dərslə eynidir.
 
+EF Core loading dərsi də 31 oktyabr 2026 tarixində genişləndirilib.
+Eager, explicit və lazy loading eyni sifariş məlumatı və ölçülmüş SQL sayları ilə izah olunur.
+N+1, projection, tracking, filtered Include və split query ayrıca nümunələrlə göstərilir.
+Git-dəki EF_Core_Loading_Demo qovluğu əsas üç üsulun işlək Console layihəsidir.
+
 00_Analiz_ve_Oxu_Plani.pdf oxu qaydasını, paketin quruluşunu və mənbələri göstərir.
 
 01_Original_PDF - 78 ilkin PDF-in dəyişdirilməmiş surəti.

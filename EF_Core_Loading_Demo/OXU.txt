@@ -1,0 +1,23 @@
+EF CORE LOADING NUMUNESI
+
+.NET 10 SDK ilə bu qovluqda ayrıca işlət:
+
+dotnet run -- eager
+dotnet run -- explicit
+dotnet run -- lazy
+
+İlk işə salınmada layihədə göstərilən paketlər NuGet-dən alınır.
+Hər işə salınma yaddaşda ayrıca SQLite bazası və eyni başlanğıc məlumatı yaradır.
+Mövcud daimi bazaya qoşulmur və onu dəyişmir.
+
+Çıxışın ilk üç sətri əsas Order sorğusundan sonrakı SQL sayını,
+Items sayını və əlaqədən istifadə edildikdən sonrakı SQL sayını göstərir.
+Ardınca həqiqətən icra edilmiş SQL əmrlərinin qeydləri yazılır.
+
+Eager: Once SQL 1, Items 2, Sonra SQL 1.
+Explicit: Once SQL 1, Items 2, Sonra SQL 2.
+Lazy: Once SQL 1, Items 2, Sonra SQL 2.
+
+Explicit-də əlavə sorğunu LoadAsync, lazy-də isə ilk Items getter-i başladır.
+PDF-dəki Product və Payment genişləndirmələri bu əsas layihəyə daxil deyil;
+onların tərifləri və əlavə etmə addımları dərsdə ayrıca göstərilib.
