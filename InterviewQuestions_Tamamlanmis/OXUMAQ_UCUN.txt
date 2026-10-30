@@ -4,6 +4,11 @@ Başlamaq üçün Senior_Backend_Tam_Beledci.pdf faylını aç.
 Bu kitab 9 yenidən yazılmış dərsi birləşdirir.
 Sadə kafe nümunəsi, bir səhifədə bir əsas fikir və addım-addım izah ilə qurulub.
 
+DI dərsi 31 oktyabr 2026 tarixində genişləndirilib: DI-sız və DI ilə müqayisə,
+container, scope, resolve və lifetime-lar bu ardıcıllıqla izah olunur.
+Constructor və lifetime nümunələri işlədilərək yoxlanılıb.
+Repozitoriyanın kökündəki DependencyInjection.pdf bu yeni dərslə eynidir.
+
 00_Analiz_ve_Oxu_Plani.pdf oxu qaydasını, paketin quruluşunu və mənbələri göstərir.
 
 01_Original_PDF - 78 ilkin PDF-in dəyişdirilməmiş surəti.
