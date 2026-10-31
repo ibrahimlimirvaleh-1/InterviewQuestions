@@ -1,23 +1,63 @@
-EF CORE LOADING NUMUNESI
+﻿EF CORE: SORĞUNUN İCRASI VƏ LOADING
 
-.NET 10 SDK ilə bu qovluqda ayrıca işlət:
+.NET 10 SDK ilə bu qovluqda ayrıca işlət. İlk dəfə paketlər NuGet-dən alınır.
+Hər komanda yeni SQLite yaddaş bazası və eyni üç sifarişi yaradır.
 
+ƏVVƏL BU ARDICILLIQLA:
+dotnet run -- foreach
+dotnet run -- query
+dotnet run -- enumerable
+dotnet run -- boundary
+dotnet run -- repeat
+dotnet run -- scalar
 dotnet run -- eager
 dotnet run -- explicit
 dotnet run -- lazy
 
-İlk işə salınmada layihədə göstərilən paketlər NuGet-dən alınır.
-Hər işə salınma yaddaşda ayrıca SQLite bazası və eyni başlanğıc məlumatı yaradır.
-Mövcud daimi bazaya qoşulmur və onu dəyişmir.
+ƏLAVƏ SORĞU NÜMUNƏLƏRİ:
+dotnet run -- asqueryable
+dotnet run -- translation
+dotnet run -- local
+dotnet run -- list-deferred
+dotnet run -- async-stream
 
-Çıxışın ilk üç sətri əsas Order sorğusundan sonrakı SQL sayını,
-Items sayını və əlaqədən istifadə edildikdən sonrakı SQL sayını göstərir.
-Ardınca həqiqətən icra edilmiş SQL əmrlərinin qeydləri yazılır.
+foreach: qurulmuş EF sorğusu dövr başlayanda icra olunur (SQL 0 -> 1).
+query: iki Where SQL-dədir; 43 alınır, 1 Order obyekti oxunur.
+enumerable/boundary: SQL 43 və 44-ü gətirir; C# 44-ü çıxarır.
+AsEnumerable SQL işlətmir; yalnız sonra ToList/foreach oxumağa başlayır.
+repeat: query iki dəfə oxunanda SQL 2; ToList sonra SQL 3;
+hazır List-i iki dəfə oxumaq SQL sayını artırmır.
+scalar: Count 2, Any True; iki SQL, Order entity-si yaradılmır.
+asqueryable: hazır List.AsQueryable nəticəsi SQL-ə geri çevrilmir.
+translation: adi IsMurad metodu Where-də SQL-ə çevrilmir; xəta tutulur.
+local: AsEnumerable-dan sonra həmin metod açıq şəkildə C#-da işləyir.
+list-deferred: hazır List-də qurulan Where də gecikdirilə bilər (2,3).
+async-stream: await foreach 43 və 44-ü oxuyur (SQL 0 -> 1).
 
 Eager: Once SQL 1, Items 2, Sonra SQL 1.
-Explicit: Once SQL 1, Items 2, Sonra SQL 2.
-Lazy: Once SQL 1, Items 2, Sonra SQL 2.
+Explicit: Once SQL 1, Items 2, Sonra SQL 2; ikinci SQL LoadAsync-dədir.
+Lazy: Once SQL 1, Items 2, Sonra SQL 2; ikinci SQL ilk Items getter-indədir.
+Hər rejim faktiki SQL qeydlərini də göstərir. Qurma/seed əmrləri sayılmır.
 
-Explicit-də əlavə sorğunu LoadAsync, lazy-də isə ilk Items getter-i başladır.
-PDF-dəki Product və Payment genişləndirmələri bu əsas layihəyə daxil deyil;
-onların tərifləri və əlavə etmə addımları dərsdə ayrıca göstərilib.
+FAYLLAR:
+Models.cs - entity-lər; CafeContext.cs - baza çıxışı;
+SeedData.cs - eyni başlanğıc məlumatı; Program.cs - başlanğıc və 3 loading;
+QueryLessons.cs - sorğu/Enumerable nümunələri.
+
+PDF-dəki əlavə mövzuları yoxlamaq üçün ayrıca layihələr:
+dotnet run --project Loading_Checks
+dotnet run --project Advanced_Demo
+
+Loading_Checks: boş/yüklənməmiş əlaqə, Reference, N+1, projection,
+tracking/no-tracking, fixup, filtered Include və bağlanmış context daxil
+20 ssenarini real SQLite-da yoxlayır. Uyğunsuzluq olsa xəta verir.
+Advanced_Demo: Product və Payment daxil edilmiş ayrıca modeldir;
+ThenInclude, iki kolleksiyanın JOIN nəticəsində 6 sətir yaratması,
+single/split və səhifələmə üzrə 4 ssenarini yoxlayır.
+SQL sayğacı EF-in əsas sorğularını sayır; Advanced_Demo-da JOIN sətrini
+ölçən əlavə diaqnostik COUNT ayrıca birbaşa SQLite əməliyyatıdır.
+Hər yoxlama nəticə təfərrüatını öz iş qovluğunda results.json-a yazır.
+Əsas layihə bu alt qovluqların C# fayllarını özünə daxil etmir.
+
+Nümunələr mövcud daimi bazaya qoşulmur. SQL nəticələri konkret model,
+EF Core 10.0.9 və göstərilən ayarlar üçündür; universal say qaydası deyil.

@@ -17,6 +17,9 @@ await SeedData.CreateAsync(options);
 sql.Clear();
 
 await using var db = new CafeContext(options);
+if (await QueryLessons.RunAsync(mode, db, sql)) return;
+if (mode is not ("eager" or "explicit" or "lazy"))
+    throw new ArgumentException("Unknown lesson: " + mode);
 Order order;
 if (mode == "eager")
     order = await db.Orders.Include(o => o.Items)
