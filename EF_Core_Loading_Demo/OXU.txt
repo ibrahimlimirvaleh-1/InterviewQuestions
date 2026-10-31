@@ -13,6 +13,7 @@ dotnet run -- scalar
 dotnet run -- eager
 dotnet run -- explicit
 dotnet run -- lazy
+dotnet run -- lazy-steps
 
 ƏLAVƏ SORĞU NÜMUNƏLƏRİ:
 dotnet run -- asqueryable
@@ -37,6 +38,8 @@ async-stream: await foreach 43 və 44-ü oxuyur (SQL 0 -> 1).
 Eager: Once SQL 1, Items 2, Sonra SQL 1.
 Explicit: Once SQL 1, Items 2, Sonra SQL 2; ikinci SQL LoadAsync-dədir.
 Lazy: Once SQL 1, Items 2, Sonra SQL 2; ikinci SQL ilk Items getter-indədir.
+lazy-steps: adi new Order ilə EF proxy-sini müqayisə edir; Items getter-i
+SQL sayını 1-dən 2-yə qaldırır, sonrakı Count və təkrar oxuma artırmır.
 Hər rejim faktiki SQL qeydlərini də göstərir. Qurma/seed əmrləri sayılmır.
 
 FAYLLAR:

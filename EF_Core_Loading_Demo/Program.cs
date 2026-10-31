@@ -10,13 +10,18 @@ var sql = new List<string>();
 var builder = new DbContextOptionsBuilder<CafeContext>()
     .UseSqlite(connection)
     .LogTo(sql.Add, new[] { RelationalEventId.CommandExecuted });
-if (mode == "lazy") builder.UseLazyLoadingProxies();
+if (mode is "lazy" or "lazy-steps") builder.UseLazyLoadingProxies();
 var options = builder.Options;
 
 await SeedData.CreateAsync(options);
 sql.Clear();
 
 await using var db = new CafeContext(options);
+if (mode == "lazy-steps")
+{
+    await LazySteps.RunAsync(db, sql);
+    return;
+}
 if (await QueryLessons.RunAsync(mode, db, sql)) return;
 if (mode is not ("eager" or "explicit" or "lazy"))
     throw new ArgumentException("Unknown lesson: " + mode);
