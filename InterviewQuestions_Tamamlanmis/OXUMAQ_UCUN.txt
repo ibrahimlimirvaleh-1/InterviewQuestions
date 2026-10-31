@@ -9,13 +9,11 @@ container, scope, resolve və lifetime-lar bu ardıcıllıqla izah olunur.
 Constructor və lifetime nümunələri işlədilərək yoxlanılıb.
 Repozitoriyanın kökündəki DependencyInjection.pdf bu yeni dərslə eynidir.
 
-EF Core loading dərsi 31 oktyabr 2026 tarixində yenidən ardıcıl yazılıb.
-Əvvəl sorğunun qurulması və icrası, deferred execution, IQueryable və IEnumerable,
-AsEnumerable, ToList və bazada/C#-da filtrləmə eyni məlumatla izah olunur.
-Sonra eager, explicit və lazy loading SQL-i başladan sətirlərlə göstərilir.
-N+1, projection, tracking, filtered Include və split query də ayrıca açılır.
-Git-dəki EF_Core_Loading_Demo sorğu və loading rejimlərini işlətmək üçündür.
-Advanced_Demo və Loading_Checks alt qovluqları ayrıca işləyən yoxlamalardır.
+EF Core loading dərsi 31 oktyabr 2026 tarixində istifadəçinin seçdiyi mövzulara daraldılıb.
+Yalnız deferred execution, IQueryable, IEnumerable və eager/explicit/lazy loading saxlanılıb.
+AsEnumerable və ToList fərqi həmin müqavilələri izah edən nümunələrin içində göstərilir.
+Hər nümunə SQL-in hansı sətirdə işlədiyini və hansı məlumatın gəldiyini izah edir.
+Git-dəki EF_Core_Loading_Demo bu kodları işlətmək üçün istifadə oluna bilər.
 
 00_Analiz_ve_Oxu_Plani.pdf oxu qaydasını, paketin quruluşunu və mənbələri göstərir.
 
