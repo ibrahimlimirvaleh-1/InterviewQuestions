@@ -10,7 +10,8 @@ var sql = new List<string>();
 var builder = new DbContextOptionsBuilder<CafeContext>()
     .UseSqlite(connection)
     .LogTo(sql.Add, new[] { RelationalEventId.CommandExecuted });
-if (mode is "lazy" or "lazy-steps") builder.UseLazyLoadingProxies();
+if (mode is "lazy" or "lazy-steps" or "nplus1-lazy")
+    builder.UseLazyLoadingProxies();
 var options = builder.Options;
 
 await SeedData.CreateAsync(options);
@@ -20,6 +21,11 @@ await using var db = new CafeContext(options);
 if (mode == "lazy-steps")
 {
     await LazySteps.RunAsync(db, sql);
+    return;
+}
+if (mode is "nplus1-lazy" or "nplus1-explicit" or "nplus1-eager")
+{
+    await LoadingComparison.RunAsync(mode, db, sql);
     return;
 }
 if (await QueryLessons.RunAsync(mode, db, sql)) return;

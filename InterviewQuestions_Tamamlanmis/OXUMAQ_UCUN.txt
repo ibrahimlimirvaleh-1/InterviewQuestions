@@ -10,7 +10,8 @@ Constructor və lifetime nümunələri işlədilərək yoxlanılıb.
 Repozitoriyanın kökündəki DependencyInjection.pdf bu yeni dərslə eynidir.
 
 EF Core loading dərsi 31 oktyabr 2026 tarixində istifadəçinin seçdiyi mövzulara daraldılıb.
-Yalnız deferred execution, IQueryable, IEnumerable və eager/explicit/lazy loading saxlanılıb.
+Deferred execution, IQueryable, IEnumerable və eager/explicit/lazy loading saxlanılıb.
+İstifadəçinin son istəyinə görə explicit/lazy müqayisəsi və N+1 də əlavə edilib.
 AsEnumerable və ToList fərqi həmin müqavilələri izah edən nümunələrin içində göstərilir.
 Hər nümunə SQL-in hansı sətirdə işlədiyini və hansı məlumatın gəldiyini izah edir.
 Git-dəki EF_Core_Loading_Demo bu kodları işlətmək üçün istifadə oluna bilər.
