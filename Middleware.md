@@ -178,4 +178,3 @@ public async Task InvokeAsync(
 **Middleware hansı pattern-ə oxşayır?** Chain of Responsibility: komponent işi görüb davamı ötürür və ya zənciri kəsir. ASP.NET Core əlavə olaraq davamı çağırışın əvvəlində və sonrasında kod işlətməyə imkan verir.
 
 Rəsmi istinadlar: [middleware və pipeline](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/), [öz middleware-ini yazmaq](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write), [IMiddleware](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/extensibility), [HttpContext](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/use-http-context), [routing](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/routing), [authentication](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/), [MVC filters](https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters).
-
